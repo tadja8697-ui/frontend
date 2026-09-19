@@ -1,0 +1,47 @@
+🔹 1. <!DOCTYPE html>
+Indique au navigateur qu'on utilise HTML5. Sans ça, le navigateur peut passer en "mode quirks" (comportement bizarre).
+
+🔹 2. <html lang="en">
+lang="en" = langue du contenu (utile pour le SEO et les lecteurs d'écran).
+
+Si ton CV est en français → lang="fr".
+
+🔹 3. Les métadonnées dans <head>
+Balise	Rôle
+<meta charset="UTF-8">	Gère les accents (é, à, ç...)
+<meta name="viewport">	Rend le site responsive sur mobile
+<meta name="description">	Résumé affiché dans Google
+<meta name="keywords">	Mots-clés (peu utilisé par Google aujourd'hui mais demandé ici)
+<meta property="og:...">	Infos affichées quand on partage le lien sur Facebook/LinkedIn
+<link rel="icon">	Favicon (petite icône dans l'onglet)
+💡 Pour le favicon : tu dois avoir un fichier favicon.ico dans ton dossier. Tu peux en générer un gratuitement sur favicon.io.
+
+🔹 4. <header> — L'en-tête
+On y met :
+
+<h1> : le nom (UN SEUL h1 par page !)
+
+Le titre du poste (un <p> suffit, ou <h2> si tu veux, mais visuellement c'est petit).
+
+<address> : balise sémantique spéciale pour les coordonnées. ✅
+
+Les liens tel: et mailto: permettent de cliquer pour appeler/envoyer un mail.
+
+🔹 5. <main> — Contenu principal
+Contient toutes les sections. Un seul <main> par page.
+
+🔹 6. <section> vs <article>
+<section> : une grande partie thématique (Skills, Education...).
+
+<article> : un contenu autonome (une expérience précise, un diplôme précis).
+
+💡 On utilise <article> dans Experience car chaque job est indépendant.
+
+🔹 7. <time datetime="...">
+Balise sémantique pour les dates. Le datetime est au format YYYY-MM (norme ISO). Le texte visible peut être "Month 20xx".
+
+🔹 8. <ul> pour les réalisations
+Liste non ordonnée → parfait pour des accomplissements sans ordre précis.
+
+🔹 9. Les liens dans "Across the Internet"
+On utilise <a href="..."> avec les vraies URL.

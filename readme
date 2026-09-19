@@ -1,0 +1,65 @@
+# 🚀 Mes exercices Frontend
+
+Bienvenue dans mon dépôt d'apprentissage du développement web !
+Ce dépôt regroupe tous mes exercices pratiques en **HTML, CSS et JavaScript**.
+
+---
+
+## 📂 Liste des exercices
+
+| N° | Exercice | Technologies | Statut |
+|----|----------|--------------|--------|
+| 01 | [Single Page CV](./01-single-page-cv/) | HTML | ✅ Terminé |
+| 02 | À venir | - | ⏳ |
+
+---
+
+## 🛠️ Technologies utilisées
+
+- HTML5 (sémantique)
+- CSS3 (à venir)
+- JavaScript (à venir)
+- Git & GitHub
+
+---
+
+## 📖 Sommaire
+
+1. [Exercice 01 : Single Page CV](#-exercice-01--single-page-cv)
+2. [Guide Git & GitHub](#-guide-git--github)
+3. [Résolution d'erreurs](#-résolution-derreurs)
+4. [Bonnes pratiques](#-bonnes-pratiques)
+
+---
+
+# 📝 Exercice 01 : Single Page CV
+
+## 🎯 Objectif
+
+Créer un **CV sur une seule page** en utilisant uniquement du **HTML sémantique**, sans CSS.
+
+### Ce que montre l'image de référence :
+
+| Élément | Contenu |
+|---|---|
+| Nom | "Your Name" (grand) |
+| Titre du poste | "Junior Frontend Developer" (vert) |
+| Coordonnées | Adresse, ville, téléphone, email |
+| Section **Skills** | HTML, CSS, JavaScript... |
+| Section **Education** | École, dates, description |
+| Section **Experience** | Entreprises, postes, dates, réalisations |
+| Section **Across the Internet** | LinkedIn, GitHub |
+
+### Checklist de l'énoncé :
+
+- ✅ **HTML sémantique** → utiliser les bonnes balises (`<header>`, `<section>`, `<article>`, `<h1>`, `<h2>`, etc.)
+- ✅ **Meta tags SEO** → `<meta name="description">`, `<meta name="keywords">`, etc.
+- ✅ **Open Graph tags** → `<meta property="og:...">`
+- ✅ **Favicon** → `<link rel="icon" href="...">`
+- ✅ **Structure sur une seule page** avec les sections demandées.
+
+---
+
+## 🧠 Méthode : comment réfléchir avant de coder
+
+Un bon développeur **planifie avant de coder**. Voici la structure logique :

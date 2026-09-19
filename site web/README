@@ -1,0 +1,37 @@
+🔹 1. Le <header> avec <nav>
+Le <header> contient le logo (un lien vers l'accueil) et la navigation. La <nav> contient une liste <ul> de liens → c'est la convention pour une navigation.
+
+💡 Pourquoi une liste ? Parce qu'un menu est une liste de liens. Les lecteurs d'écran annoncent "liste de 4 éléments" → l'utilisateur comprend.
+
+🔹 2. Le <main> unique
+Chaque page a UN SEUL <main>. C'est le contenu propre à la page.
+
+🔹 3. <section> vs <article> vs <aside>
+Balise	Quand l'utiliser ?	Exemple ici
+<section>	Groupe thématique	Hero, Reviews, colonnes Work/Edu
+<article>	Contenu autonome	Un projet, un article de blog, un avis
+<aside>	Contenu secondaire	La colonne "Projects" (résumé, latéral)
+💡 Astuce pour tester : si tu peux copier un bloc et le mettre ailleurs sans perdre son sens → <article>. Sinon → <section>.
+
+🔹 4. <blockquote> pour les citations
+Les avis des professeurs sont des citations → on utilise <blockquote> + <footer> (pour l'auteur).
+
+🔹 5. Le formulaire <form>
+Balise	Rôle
+<form action="#" method="post">	Conteneur du formulaire. action = où envoyer, method = comment
+<fieldset> + <legend>	Groupe de champs + titre du groupe
+<label for="id">	Étiquette liée à un champ (clic sur le label = focus sur le champ)
+<input type="text/email">	Champ de saisie
+<textarea>	Champ multi-lignes
+required	Rend le champ obligatoire
+<button type="submit">	Bouton d'envoi
+⚠️ Règle absolue : chaque <input> doit avoir un id, et chaque <label> doit avoir un for qui correspond exactement à cet id. C'est crucial pour l'accessibilité.
+
+🔹 6. Les meta uniques par page
+Chaque page doit avoir :
+
+Un <title> différent (bon pour le SEO).
+
+Une <meta name="description"> différente.
+
+❌ Erreur à éviter : copier la même description sur les 4 pages. Google n'aime pas.
