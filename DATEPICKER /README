@@ -1,0 +1,125 @@
+🔹 4.1 — Le positionnement absolu (LE concept clé)
+css
+.datepicker {
+    position: relative;      /* Référentiel */
+}
+
+.calendar {
+    position: absolute;      /* Sort du flux normal */
+    top: calc(100% + 8px);   /* Sous l'input */
+    left: 0;
+}
+Décomposons :
+
+Propriété	Rôle
+position: relative sur le parent	Établit un référentiel pour les enfants en absolute
+position: absolute sur l'enfant	Sort du flux — les autres éléments ne le poussent plus
+top: 100%	Place le haut de l'enfant à 100% de la hauteur du parent (= juste en dessous)
+top: calc(100% + 8px)	Ajoute 8px d'espace sous l'input
+z-index: 10	Passe au-dessus des autres éléments
+💡 Sans position: relative sur le parent, l'enfant absolute se positionnerait par rapport à la fenêtre (viewport), pas à l'input. Erreur classique n°1.
+
+🔹 4.2 — La grille 7 colonnes avec repeat(7, 1fr)
+css
+grid-template-columns: repeat(7, 1fr);
+repeat(7, 1fr) = 1fr 1fr 1fr 1fr 1fr 1fr 1fr
+
+Chaque colonne fait 1/7 de la largeur.
+
+💡 Alternative : repeat(7, minmax(0, 1fr)) évite les débordements si le contenu est trop grand.
+
+🔹 4.3 — aspect-ratio: 1 / 1 (le carré parfait)
+css
+.day {
+    aspect-ratio: 1 / 1;
+}
+💡 Révolution moderne : avant, il fallait faire du padding-top: 100% et jouer avec position: absolute. Maintenant, une seule ligne suffit. Supporté partout depuis 2021.
+
+🔹 4.4 — :focus-within (focus sur le conteneur)
+css
+.input-group:focus-within {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+💡 :focus-within = "ce conteneur contient un élément focus". Ça permet de styliser tout l'input-group quand on clique dans l'input. Élégant.
+
+🔹 4.5 — :not(.empty) pour exclure les cases vides
+css
+.day:not(.empty):hover {
+    background-color: var(--color-bg-alt);
+}
+💡 :not() = sélecteur de négation. On dit "les .day qui ne sont PAS .empty". Les cases vides ne réagissent pas au survol.
+
+🔹 4.6 — user-select: none sur les jours
+css
+.day {
+    user-select: none;
+}
+💡 Empêche la sélection du texte quand on clique sur un jour. Améliore l'UX d'un calendrier.
+
+🔹 4.7 — L'icône SVG inline
+html
+<svg xmlns="..." viewBox="0 0 24 24" fill="none" stroke="currentColor" ...>
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+    ...
+</svg>
+💡 Pourquoi SVG et pas une image ?
+
+Scalable : s'adapte à toutes les tailles.
+
+Colorable : stroke="currentColor" prend la couleur du texte → on peut changer la couleur avec color en CSS.
+
+Léger : quelques centaines d'octets.
+
+💡 Astuce : utilise feathericons.com ou lucide.dev pour des icônes gratuites.
+
+Le pattern "dropdown/dropdown-panel" à retenir :
+
+1. Parent : position: relative
+2. Enfant : position: absolute
+   → top: calc(100% + X)  (sous le parent)
+   → z-index: 10          (au-dessus)
+   → width: fixe ou 100%
+
+Grille calendrier :
+   grid-template-columns: repeat(7, 1fr)
+   aspect-ratio: 1 / 1 sur les cellules
+
+BONUS utile :
+   .parent:focus-within { /* styles */ }
+   .item:not(.empty):hover { /* styles */ }
+   user-select: none;
+
+💡 Astuce de prof
+Le pattern "input + dropdown en position absolute" revient TOUT le temps :
+
+Datepicker
+
+Select custom
+
+Autocomplete
+
+Menu déroulant
+
+Tooltip
+
+Maîtrise-le bien, tu le réutiliseras des dizaines de fois.
+
+💡 Pour t'entraîner : cache le calendrier par défaut (display: none) et ajoute une règle CSS :hover ou :focus-within pour l'afficher. Ça te fait un datepicker interactif en CSS pur ! 🎁
+
+Exemple :
+
+css
+.calendar {
+    display: none;
+}
+
+.datepicker:focus-within .calendar {
+    display: block;
+}
+Ça marche sans JavaScript (mais sans fermeture propre quand on clique ailleurs — d'où l'intérêt du JS plus tard).
+
+Pour aller plus loin :
+Icônes SVG : lucide.dev
+
+CSS aspect-ratio : MDN

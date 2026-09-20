@@ -1,0 +1,324 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-bg-dark: #1a1a1a;
+    --color-bg-alt: #f9fafb;
+    --color-border: #e5e7eb;
+    --color-star: #fbbf24;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 12px;
+    --radius-lg: 24px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg-alt);
+    line-height: 1.6;
+    padding: var(--space-lg);
+    min-height: 100vh;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* ============================================================
+   3. GRILLE GLOBALE DES TÉMOIGNAGES
+   ============================================================ */
+
+.testimonials {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;   /* Mobile : 1 seule colonne */
+    gap: var(--space-lg);
+}
+
+/* ============================================================
+   4. STYLE DE BASE DES CARTES
+   ============================================================ */
+
+.card {
+    background-color: var(--color-bg);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+}
+
+/* ============================================================
+   5. AUTEUR (avatar + nom + rôle) — commun à toutes les cartes
+   ============================================================ */
+
+.card-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-md);
+}
+
+.card-author img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.card-author h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.card-author p {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+/* ============================================================
+   6. CARTE 1 : BULLE (speech bubble)
+   ============================================================ */
+
+.card--bubble {
+    background: transparent;
+    padding: 0;
+}
+
+.bubble {
+    background-color: var(--color-bg-dark);
+    color: white;
+    padding: var(--space-lg);
+    border-radius: var(--radius);
+    position: relative;   /* Pour positionner la queue */
+}
+
+/* LA QUEUE (petit triangle) */
+.bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;                /* Juste sous la bulle */
+    left: 24px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid var(--color-bg-dark);   /* ← Couleur de la bulle */
+}
+
+.bubble p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.bubble-highlight {
+    font-weight: 700;
+    margin-top: var(--space-md);
+}
+
+.card--bubble .card-author {
+    margin-top: var(--space-xl);   /* Espace après la queue */
+}
+
+/* ============================================================
+   7. CARTE 2 : SIMPLE (bordure + texte + auteur en bas)
+   ============================================================ */
+
+.card--simple {
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;   /* Pousse l'auteur en bas */
+}
+
+.card--simple blockquote p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+/* ============================================================
+   8. CARTE 3 : SPLIT (photo + contenu côte à côte)
+   ============================================================ */
+
+.card--split {
+    padding: 0;                       /* Pas de padding : la photo touche les bords */
+    overflow: hidden;                 /* Coupe les débordements */
+    display: grid;
+    grid-template-columns: 1fr;       /* Mobile : empilé */
+}
+
+.split-photo {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.split-content {
+    background-color: var(--color-bg-dark);
+    color: white;
+    padding: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.stars {
+    color: var(--color-star);
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.split-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.split-role {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    margin-bottom: var(--space-md);
+}
+
+.split-content blockquote p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e5e7eb;
+}
+
+/* ============================================================
+   9. CARTE 4 : CAROUSEL
+   ============================================================ */
+
+.card--carousel {
+    border: 1px solid var(--color-border);
+    text-align: center;
+    padding: var(--space-xl) var(--space-lg);
+}
+
+.carousel-quote p {
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto var(--space-lg);
+    color: var(--color-text);
+}
+
+/* Navigation : bouton ‹ + avatars + bouton › */
+.carousel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+.carousel-nav button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: var(--space-sm);
+    transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.carousel-nav button:hover {
+    color: var(--color-text);
+}
+
+.carousel-nav button:active {
+    transform: scale(0.9);
+}
+
+.carousel-avatars {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.carousel-avatars img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    opacity: 0.4;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* L'avatar ACTIF est plus grand et opaque */
+.carousel-avatars img.is-active {
+    width: 56px;
+    height: 56px;
+    opacity: 1;
+    border: 2px solid var(--color-text);
+}
+
+.carousel-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text);
+}
+
+/* ============================================================
+   10. RESPONSIVE : TABLETTE + DESKTOP (≥ 768px)
+   ============================================================ */
+
+@media (min-width: 768px) {
+
+    /* Grille 2 colonnes */
+    .testimonials {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Carte 3 : photo à gauche (40%) + contenu à droite (60%) */
+    .card--split {
+        grid-column: span 2;
+        grid-template-columns: 300px 1fr;
+    }
+
+    .split-photo {
+        height: 100%;              /* La photo remplit toute la hauteur */
+        min-height: 280px;
+    }
+
+    /* Carte 4 : pleine largeur */
+    .card--carousel {
+        grid-column: span 2;
+    }
+}
+
+/* ============================================================
+   11. BONUS : DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-text-muted: #9ca3af;
+        --color-bg: #1f1f1f;
+        --color-bg-alt: #121212;
+        --color-bg-dark: #000000;
+        --color-border: #333333;
+    }
+}

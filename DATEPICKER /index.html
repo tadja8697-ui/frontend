@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Datepicker UI - Composant HTML et CSS pur.">
+    <meta name="author" content="Your Name">
+
+    <meta property="og:title" content="Datepicker UI">
+    <meta property="og:description" content="Un composant datepicker fait en HTML et CSS.">
+    <meta property="og:type" content="website">
+
+    <title>Datepicker UI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+<body>
+
+    <main class="page">
+        <h1>Datepicker</h1>
+
+        <!-- ========== LE COMPOSANT DATEPICKER ========== -->
+        <div class="datepicker">
+
+            <!-- Input + bouton -->
+            <div class="input-group">
+                <input
+                    type="text"
+                    placeholder="dd / mm / yyyy"
+                    aria-label="Sélectionner une date"
+                >
+                <button type="button" aria-label="Ouvrir le calendrier">
+                    <!-- Icône calendrier en SVG -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Calendrier -->
+            <div class="calendar">
+
+                <!-- En-tête : mois + flèches -->
+                <header class="calendar-header">
+                    <button type="button" aria-label="Mois précédent">◀</button>
+                    <h2>December 2022</h2>
+                    <button type="button" aria-label="Mois suivant">▶</button>
+                </header>
+
+                <!-- Jours de la semaine -->
+                <div class="weekdays" aria-hidden="true">
+                    <span>S</span>
+                    <span>M</span>
+                    <span>T</span>
+                    <span>W</span>
+                    <span>T</span>
+                    <span>F</span>
+                    <span>S</span>
+                </div>
+
+                <!-- Grille des jours -->
+                <div class="days">
+                    <!-- Semaine 1 : cases vides + 1, 2, 3 -->
+                    <span class="day empty"></span>
+                    <span class="day empty"></span>
+                    <span class="day empty"></span>
+                    <span class="day empty"></span>
+                    <span class="day">1</span>
+                    <span class="day">2</span>
+                    <span class="day">3</span>
+
+                    <!-- Semaine 2 -->
+                    <span class="day">4</span>
+                    <span class="day">5</span>
+                    <span class="day">6</span>
+                    <span class="day">7</span>
+                    <span class="day">8</span>
+                    <span class="day">9</span>
+                    <span class="day">10</span>
+
+                    <!-- Semaine 3 -->
+                    <span class="day">11</span>
+                    <span class="day">12</span>
+                    <span class="day">13</span>
+                    <span class="day">14</span>
+                    <span class="day">15</span>
+                    <span class="day">16</span>
+                    <span class="day">17</span>
+
+                    <!-- Semaine 4 -->
+                    <span class="day">18</span>
+                    <span class="day">19</span>
+                    <span class="day">20</span>
+                    <span class="day">21</span>
+                    <span class="day">22</span>
+                    <span class="day">23</span>
+                    <span class="day">24</span>
+
+                    <!-- Semaine 5 -->
+                    <span class="day">25</span>
+                    <span class="day">26</span>
+                    <span class="day">27</span>
+                    <span class="day">28</span>
+                    <span class="day">29</span>
+                    <span class="day">30</span>
+                    <span class="day">31</span>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

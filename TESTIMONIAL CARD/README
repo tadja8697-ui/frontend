@@ -1,0 +1,138 @@
+🔹 4.1 — La bulle de dialogue (Carte 1) : le triangle en CSS
+css
+.bubble {
+    position: relative;
+}
+
+.bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 24px;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid var(--color-bg-dark);
+}
+💡 Le secret du triangle : on crée un élément avec width: 0 et height: 0, puis on joue avec les bordures.
+
+text
+     ▲         border-top: 12px solid black   ← Triangle visible
+    ╱ ╲        border-left: 12px solid transparent
+   ╱   ╲       border-right: 12px solid transparent
+  ╱     ╲
+En rendant les bordures gauche/droite transparentes, seule la bordure du haut reste visible → un triangle.
+
+🔹 4.2 — La carte simple (Carte 2) : justify-content: space-between
+css
+.card--simple {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;   /* ← LA clé */
+}
+Le <blockquote> en haut
+
+Le <footer> en bas
+
+space-between pousse automatiquement l'auteur tout en bas, quelle que soit la hauteur de la carte.
+
+💡 Utile quand deux cartes sont côte à côte : elles peuvent avoir des hauteurs différentes, mais l'auteur reste collé en bas.
+
+🔹 4.3 — La carte split (Carte 3) : grid-template-columns: 300px 1fr
+css
+.card--split {
+    display: grid;
+    grid-template-columns: 300px 1fr;   /* Photo fixe, contenu élastique */
+}
+300px : la photo a une largeur fixe.
+
+1fr : le contenu prend tout le reste.
+
+💡 Alternative : 40% 60% ou minmax(200px, 300px) 1fr (avec largeur min/max).
+
+🔹 4.4 — Le carousel (Carte 4) : is-active + order
+html
+<img class="is-active" src="..." alt="...">
+css
+.carousel-avatars img {
+    width: 40px;
+    opacity: 0.4;
+}
+
+.carousel-avatars img.is-active {
+    width: 56px;
+    opacity: 1;
+    border: 2px solid var(--color-text);
+}
+💡 Pattern BEM : on utilise une classe d'état (is-active) qu'on peut ajouter/retirer en JavaScript plus tard. C'est la bonne façon de faire.
+
+🔹 4.5 — La grille responsive : grid-column: span 2
+css
+.testimonials {
+    grid-template-columns: 1fr 1fr;   /* 2 colonnes */
+}
+
+.card--split {
+    grid-column: span 2;   /* ← Prend les 2 colonnes */
+}
+💡 span 2 = "cette carte occupe 2 colonnes de la grille". C'est super puissant pour les layouts asymétriques.
+
+🔹 4.6 — Le pattern BEM (convention de nommage)
+Type	Exemple	Rôle
+Block	.card	Composant autonome
+Element	.card-author	Partie du composant
+Modifier	.card--bubble	Variante du composant
+État	.is-active	État dynamique
+💡 Avantage : le code CSS est lisible et prévisible. Tu sais exactement où chercher.
+
+🔹 4.7 — aria-label sur les boutons
+html
+<button type="button" aria-label="Témoignage précédent">‹</button>
+💡 Le caractère ‹ seul n'a aucun sens pour un lecteur d'écran. aria-label donne une description → accessibilité.
+
+Les 4 techniques à retenir de cet exercice :
+
+1. BULLE (Carte 1)
+   .bubble { position: relative }
+   .bubble::after { triangle en bordures CSS }
+
+2. AUTEUR EN BAS (Carte 2)
+   .card--simple {
+       display: flex;
+       flex-direction: column;
+       justify-content: space-between;
+   }
+
+3. SPLIT (Carte 3)
+   .card--split {
+       display: grid;
+       grid-template-columns: 300px 1fr;
+   }
+
+4. CAROUSEL (Carte 4)
+   .carousel-avatars img.is-active {
+       width: 56px;
+       opacity: 1;
+   }
+
+Grille globale :
+   .testimonials { grid-template-columns: 1fr 1fr; }
+   .card--split, .card--carousel { grid-column: span 2; }
+
+💡 Astuce de prof
+C'est l'exercice qui t'apprend le plus de patterns en un seul coup. Prends le temps de bien comprendre :
+
+La bulle : ce triangle en CSS revient partout (tooltips, popovers, bulles de chat...).
+
+Le justify-content: space-between : essentiel pour pousser un élément en bas.
+
+Le grid-template-columns: Xpx 1fr : LA base de tout layout split.
+
+Refais-le sans regarder le code dans 2 jours. Si tu y arrives → tu as compris. 💪
+
+Pour aller plus loin :
+CSS Layout Generator : layout.bradwoods.io
+
+Fancy Border Radius Generator : 9elements.github.io/fancy-border-radius
+

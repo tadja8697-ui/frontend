@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Formulaire accessible de mise à jour de profil.">
+    <meta name="author" content="Your Name">
+
+    <meta property="og:title" content="Accessible Form UI">
+    <meta property="og:description" content="Formulaire accessible HTML et CSS.">
+    <meta property="og:type" content="website">
+
+    <title>Accessible Form UI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="page">
+
+        <div class="layout">
+
+            <!-- ========== FORMULAIRE ========== -->
+            <form class="profile-form" novalidate>
+
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="What should we call you?"
+                        autocomplete="name"
+                        aria-required="true"
+                    >
+                </div>
+
+                <!-- Email (avec erreur) -->
+                <div class="form-group has-error">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="john@doe.com"
+                        autocomplete="email"
+                        aria-required="true"
+                        aria-invalid="true"
+                        aria-describedby="email-error"
+                    >
+                    <p id="email-error" class="error-message" role="alert">
+                        Email is already taken
+                    </p>
+                </div>
+
+                <!-- Enter Password -->
+                <div class="form-group">
+                    <label for="password">Enter Password</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="XXXXXXXX"
+                            autocomplete="new-password"
+                            aria-required="true"
+                        >
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            aria-label="Afficher le mot de passe"
+                            aria-pressed="false"
+                        >
+                            <!-- Icône œil (SVG) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            name="confirm-password"
+                            placeholder="XXXXXXXX"
+                            autocomplete="new-password"
+                            aria-required="true"
+                        >
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            aria-label="Afficher la confirmation du mot de passe"
+                            aria-pressed="false"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bouton principal -->
+                <button type="submit" class="btn-submit">Update Profile</button>
+
+            </form>
+
+            <!-- ========== PANNEAU LATÉRAL ========== -->
+            <aside class="completeness" aria-labelledby="completeness-title">
+
+                <!-- Cercle de progression -->
+                <div class="progress-circle" role="img" aria-label="Profil complété à 65%">
+                    <span class="progress-value">65%</span>
+                </div>
+
+                <h2 id="completeness-title" class="completeness-title">
+                    Profile Completeness
+                </h2>
+
+                <!-- Checklist -->
+                <ul class="checklist">
+                    <li class="checklist-item is-done">Create Account</li>
+                    <li class="checklist-item is-done">Update Roadmap Progress</li>
+                    <li class="checklist-item is-done">Setup Public Profile</li>
+                    <li class="checklist-item">Complete your first project</li>
+                    <li class="checklist-item">Invite your Friends</li>
+                </ul>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

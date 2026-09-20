@@ -91,3 +91,21 @@ rgba(0,0,0,0.05) : couleur (noir transparent à 5%)
 
 💡 Une ombre très subtile donne de la profondeur sans être vulgaire. Moins c'est fort, mieux c'est.
 
+Le pattern à retenir pour un timeline/changelog :
+
+1. Conteneur : <ol> avec position: relative
+2. Ligne verticale : ::before en position: absolute
+3. Chaque ligne : display: grid + grid-template-columns: 1fr auto 1fr
+4. Point : span avec border-radius: 50% + z-index: 1
+5. Date : text-align: right (colonne gauche)
+6. Texte : text-align: left (colonne droite)
+
+Sur mobile :
+- Ligne à gauche
+- grid-template-columns: auto 1fr
+- Le point s'étend sur 2 lignes (grid-row: span 2)
+
+Pour aller plus loin :
+CSS Grid Garden (jeu) : cssgridgarden.com
+
+Pattern timeline CSS : cherche "CSS timeline" sur CodePen pour voir des variantes.
