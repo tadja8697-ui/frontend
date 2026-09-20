@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Contactez TADJA ADA RAOULYNE DUMONDE, Frontend Developer.">
+    <meta name="author" content="TADJA ADA RAOULYNE DUMONDE ">
+
+    <meta property="og:title" content="Contact - TADJA ADA RAOULYNE DUMONDE">
+    <meta property="og:description" content="Formulaire de contact.">
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts (bonus) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Notre feuille de style -->
+<link rel="stylesheet" href="style.css">
+
+    <title>Contact - TADJA ADA RAOULYNE DUMONDE</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+<body>
+
+    <header>
+        <a href="index.html"><strong>TADJA ADA RAOULYNE DUMONDE</strong></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="articles.html">Articles</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Contact Me</h1>
+
+        <section>
+            <p>Vous avez une question ou une proposition ? Remplissez le formulaire ci-dessous.</p>
+
+            <form action="#" method="post">
+                <!-- Champ Nom -->
+                <fieldset>
+                    <legend>Vos informations</legend>
+
+                    <p>
+                        <label for="name">Nom complet :</label>
+                        <input type="text" id="name" name="name" required>
+                    </p>
+
+                    <p>
+                        <label for="email">Email :</label>
+                        <input type="email" id="email" name="email" required>
+                    </p>
+                </fieldset>
+
+                <!-- Champ Message -->
+                <fieldset>
+                    <legend>Votre message</legend>
+
+                    <p>
+                        <label for="subject">Sujet :</label>
+                        <input type="text" id="subject" name="subject">
+                    </p>
+
+                    <p>
+                        <label for="message">Message :</label><br>
+                        <textarea id="message" name="message" rows="8" cols="40" required></textarea>
+                    </p>
+                </fieldset>
+
+                <!-- Bouton -->
+                <p>
+                    <button type="submit">Envoyer le message</button>
+                </p>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; all rights reserved 2025</p>
+    </footer>
+
+</body>
+</html>

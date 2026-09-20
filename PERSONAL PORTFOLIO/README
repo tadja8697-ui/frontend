@@ -1,0 +1,121 @@
+Ordre du CSS :
+1. Reset (* { box-sizing: border-box })
+2. Variables (:root { --color-... })
+3. Base (body, h1, a...)
+4. Composants (header, nav, main, footer)
+5. États (:hover, :focus, :active)
+6. Media queries (768px, 1024px)
+7. Dark mode (@media prefers-color-scheme)
+
+Outils clés :
+- Flexbox : display: flex + gap + justify-content + align-items
+- Variables : var(--color-accent)
+- Mobile-first : base + @media (min-width: X)
+- Box model : * { box-sizing: border-box }
+
+🔹 4.1 — Le box model (le concept le plus important !)
+En CSS, chaque élément est une boîte avec 4 couches :
+
+text
+┌─────────────────────────────┐
+│         MARGIN              │  ← Espace extérieur
+│  ┌───────────────────────┐  │
+│  │       BORDER          │  │  ← Bordure
+│  │  ┌─────────────────┐  │  │
+│  │  │    PADDING      │  │  │  ← Espace intérieur
+│  │  │  ┌───────────┐  │  │  │
+│  │  │  │  CONTENT  │  │  │  │  ← Texte / image
+│  │  │  └───────────┘  │  │  │
+│  │  └─────────────────┘  │  │
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+💡 box-sizing: border-box change tout : la largeur inclut padding + border dans le calcul. Sans ça, un élément width: 100% + padding: 20px dépasse de son parent. C'est LA règle n°1 du CSS moderne.
+
+🔹 4.2 — Les variables CSS (:root)
+css
+:root {
+    --color-accent: #2563eb;
+}
+
+a { color: var(--color-accent); }
+✅ Avantages :
+
+Centralisé : tu changes la couleur à UN endroit.
+
+Cohérent : tous les liens ont la même couleur.
+
+Maintenable : pour changer de thème, on modifie juste :root.
+
+💡 Analogie : c'est comme les "styles" dans Word. Tu changes le style "Titre 1" → tous les titres se mettent à jour.
+
+🔹 4.3 — Flexbox (le cœur de la mise en page moderne)
+css
+header {
+    display: flex;
+    flex-direction: column;    /* Empilé verticalement */
+    align-items: center;       /* Centré horizontalement */
+}
+Propriété	Rôle
+display: flex	Active Flexbox
+flex-direction: column/row	Direction des enfants
+justify-content	Alignement sur l'axe principal
+align-items	Alignement sur l'axe secondaire
+gap	Espace entre les enfants
+flex: 1	L'enfant prend tout l'espace disponible
+💡 Astuce : pour centrer un élément, justify-content: center + align-items: center. Fini les calvaires !
+
+🔹 4.4 — Les media queries (le responsive)
+css
+/* Mobile-first : on écrit d'abord le style mobile */
+header { flex-direction: column; }
+
+/* Puis on AJOUTE des règles pour les grands écrans */
+@media (min-width: 768px) {
+    header { flex-direction: row; }
+}
+💡 min-width = "à partir de cette largeur". C'est la convention mobile-first : on part du petit et on agrandit.
+
+Breakpoint	Cible
+0 → 767px	Mobile
+768px → 1023px	Tablette
+1024px → ∞	Desktop
+🔹 4.5 — La typographie avec Google Fonts
+html
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+css
+body { font-family: 'Inter', system-ui, sans-serif; }
+💡 system-ui en secours : si Google Fonts ne charge pas, on utilise la police du système. Toujours prévoir des fallbacks.
+
+🔹 4.6 — Les états :hover, :focus, :active
+css
+button:hover { background: var(--color-accent-hover); }   /* Souris dessus */
+button:active { transform: scale(0.98); }                 /* Clic en cours */
+input:focus { border-color: var(--color-accent); }        /* Champ sélectionné */
+✅ Améliore l'UX : l'utilisateur a un retour visuel.
+
+🔹 4.7 — Le dark mode automatique
+css
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #1a1a1a;
+        --color-text: #d4d4d4;
+    }
+}
+💡 Le navigateur détecte le thème du système de l'utilisateur → applique automatiquement. Zéro JavaScript. 🎉
+
+🔹 4.8 — Les transitions
+css
+input {
+    transition: border-color 0.2s ease;
+}
+✅ Rend les changements fluides au lieu d'être brutaux.
+
+💡 Astuce de prof
+Tu vas galérer au début, c'est normal. Le CSS, c'est 20% de logique et 80% de pratique. Ne copie-colle pas bêtement : modifie une valeur, regarde ce qui change, comprends pourquoi.
+
+Pour aller plus loin :
+CSS Diner (jeu pour apprendre les sélecteurs) : flukeout.github.io
+
+Flexbox Froggy (jeu pour Flexbox) : flexboxfroggy.com
+
+CSS Tricks : css-tricks.com/snippets/css/a-guide-to-flexbox

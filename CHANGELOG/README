@@ -1,0 +1,93 @@
+🔹 4.1 — La structure sémantique
+Balise	Pourquoi ?
+<main class="changelog">	Le contenu principal de la page
+<header>	En-tête de la carte (titre + sous-titre)
+<ol>	Liste ordonnée car les dates ont un ordre chronologique
+<time datetime="2024-09-03">	Balise sémantique : la date est lisible par les machines
+<span class="dot">	Le point : un élément purement décoratif
+<a class="btn">	Un lien stylé en bouton (plutôt qu'un <button>, car ça navigue)
+💡 aria-hidden="true" sur le point : on dit aux lecteurs d'écran "ignore-le, c'est décoratif".
+
+🔹 4.2 — Le CSS Grid : la clé de l'alignement
+css
+.changelog-list li {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-md);
+}
+Décomposons :
+
+text
+┌─────────────┬──────┬─────────────┐
+│    1fr      │ auto │     1fr     │
+│             │      │             │
+│  September  │  ●   │  Announcing │
+│  3, 2024    │      │  Projects   │
+└─────────────┴──────┴─────────────┘
+1fr = "prends 1 fraction de l'espace disponible"
+
+auto = "prends juste la taille nécessaire"
+
+💡 Pourquoi 1fr auto 1fr ? Parce que le point est au centre exact. Les deux côtés sont égaux, donc le point est parfaitement centré. Magique.
+
+🔹 4.3 — La ligne verticale : ::before + position: absolute
+css
+.changelog-list {
+    position: relative;   /* ← Établit un référentiel */
+}
+
+.changelog-list::before {
+    content: '';          /* Obligatoire pour un pseudo-élément */
+    position: absolute;   /* Se positionne par rapport au parent */
+    top: 12px;            /* Commence au 1er point */
+    bottom: 12px;         /* Finit au dernier point */
+    left: 50%;
+    width: 1px;
+    background: var(--color-line);
+    transform: translateX(-50%);   /* Vraie centrage */
+}
+💡 Pourquoi translateX(-50%) ? Parce que left: 50% place le bord gauche à 50%. Pour centrer la ligne elle-même, il faut la décaler de moitié de sa propre largeur. C'est un pattern ultra-classique.
+
+🔹 4.4 — Le point au-dessus de la ligne : z-index
+css
+.dot {
+    position: relative;   /* Nécessaire pour que z-index fonctionne */
+    z-index: 1;
+    background: var(--color-text);
+    border-radius: 50%;
+}
+Le z-index: 1 place le point au-dessus de la ligne. Sans ça, la ligne passerait au travers du point.
+
+🔹 4.5 — Le <time datetime="...">
+html
+<time datetime="2024-09-03">September 3, 2024</time>
+datetime : format ISO (YYYY-MM-DD) → lisible par Google, les calendriers, etc.
+
+Contenu visible : format humain → lisible par nous.
+
+💡 Bonus SEO : Google comprend mieux la chronologie. Utile pour les blogs.
+
+🔹 4.6 — Le responsive : transformation mobile
+Sur mobile (< 640px), on change complètement l'approche :
+
+La ligne verticale passe à gauche.
+
+Chaque ligne devient : point | (titre + date empilés).
+
+Le point devient un élément qui s'étend sur 2 lignes grâce à grid-row: 1 / span 2.
+
+💡 order : permet de changer l'ordre visuel sans changer le HTML. Ici, on met le titre avant la date sur mobile.
+
+🔹 4.7 — Le box-shadow
+css
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+0 : décalage horizontal
+
+1px : décalage vertical
+
+3px : flou
+
+rgba(0,0,0,0.05) : couleur (noir transparent à 5%)
+
+💡 Une ombre très subtile donne de la profondeur sans être vulgaire. Moins c'est fort, mieux c'est.
+

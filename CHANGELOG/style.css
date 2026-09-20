@@ -1,0 +1,234 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-light: #9ca3af;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-border: #e5e7eb;
+    --color-line: #d1d5db;
+    --color-btn: #1a1a1a;
+    --color-btn-hover: #333333;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+
+    --radius: 8px;
+    --radius-lg: 24px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: #f3f4f6;   /* Fond gris clair pour faire ressortir la carte */
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-md);
+}
+
+/* ============================================================
+   3. CONTENEUR PRINCIPAL (la carte)
+   ============================================================ */
+
+.changelog {
+    background-color: var(--color-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl) var(--space-lg);
+    max-width: 720px;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================================
+   4. EN-TÊTE
+   ============================================================ */
+
+.changelog-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.changelog-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+}
+
+.changelog-header p {
+    color: var(--color-text-light);
+    font-size: 1rem;
+}
+
+/* ============================================================
+   5. LA LISTE (CSS GRID — LE CŒUR DU SUJET)
+   ============================================================ */
+
+.changelog-list {
+    list-style: none;
+    position: relative;   /* Pour positionner la ligne verticale */
+}
+
+/* LA LIGNE VERTICALE (pseudo-élément ::before) */
+.changelog-list::before {
+    content: '';
+    position: absolute;
+    top: 12px;            /* Commence au niveau du 1er point */
+    bottom: 12px;         /* Finit au niveau du dernier point */
+    left: 50%;            /* Centrée horizontalement */
+    width: 1px;
+    background-color: var(--color-line);
+    transform: translateX(-50%);   /* Ajustement pour centrer parfaitement */
+}
+
+/* Chaque ligne de la liste = 3 colonnes */
+.changelog-list li {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;   /* ← LA clé ! */
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
+}
+
+/* Colonne 1 : la date (alignée à droite, proche du point) */
+.changelog-list time {
+    text-align: right;
+    color: var(--color-text-light);
+    font-size: 0.95rem;
+    white-space: nowrap;   /* Empêche le retour à la ligne */
+}
+
+/* Colonne 2 : le point */
+.dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-text);
+    border-radius: 50%;
+    display: block;
+    position: relative;
+    z-index: 1;            /* Passe AU-DESSUS de la ligne verticale */
+}
+
+/* Colonne 3 : le texte de la mise à jour */
+.changelog-list p {
+    font-weight: 500;
+    color: var(--color-text);
+    font-size: 1rem;
+}
+
+/* ============================================================
+   6. LE BOUTON
+   ============================================================ */
+
+.btn {
+    display: block;
+    width: fit-content;
+    margin: var(--space-xl) auto 0;
+    background-color: var(--color-btn);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+    background-color: var(--color-btn-hover);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* ============================================================
+   7. RESPONSIVE : MOBILE (par défaut < 640px)
+   ============================================================ */
+
+@media (max-width: 639px) {
+    .changelog {
+        padding: var(--space-lg) var(--space-md);
+        border-radius: var(--radius);
+    }
+
+    .changelog-header h1 {
+        font-size: 1.8rem;
+    }
+
+    /* Sur mobile : la ligne verticale passe à gauche */
+    .changelog-list::before {
+        left: 6px;
+        transform: none;
+    }
+
+    /* Chaque ligne : 2 colonnes (point + contenu) */
+    .changelog-list li {
+        grid-template-columns: auto 1fr;
+        gap: var(--space-md);
+        align-items: start;
+    }
+
+    /* La date passe SOUS le texte (on inverse l'ordre) */
+    .changelog-list time {
+        grid-column: 2;
+        text-align: left;
+        font-size: 0.85rem;
+        order: 2;   /* On la met après le <p> */
+    }
+
+    .changelog-list p {
+        grid-column: 2;
+        order: 1;
+    }
+
+    .dot {
+        grid-column: 1;
+        grid-row: 1 / span 2;   /* Le point s'étend sur 2 lignes */
+        align-self: start;
+        margin-top: 6px;
+    }
+}
+
+/* ============================================================
+   8. BONUS : DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-text-light: #9ca3af;
+        --color-bg: #1a1a1a;
+        --color-border: #333333;
+        --color-line: #4b5563;
+        --color-btn: #f5f5f5;
+        --color-btn-hover: #d1d5db;
+    }
+
+    body {
+        background-color: #0a0a0a;
+    }
+
+    .btn {
+        color: #1a1a1a;
+    }
+}
