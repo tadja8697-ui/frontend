@@ -1,0 +1,165 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-bg: #ffffff;
+    --color-gap: 8px;          /* Espace entre les images */
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --radius: 4px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.6;
+    padding: 1.5rem;
+}
+
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* ============================================================
+   3. LA GRILLE (le cœur de l'exercice)
+   ============================================================ */
+
+.grid {
+    display: grid;
+    gap: var(--color-gap);
+
+    /* MOBILE : 1 seule colonne, tout empilé */
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "a"
+        "b"
+        "c"
+        "d"
+        "e"
+        "f";
+}
+
+/* ============================================================
+   4. STYLE DES ITEMS
+   ============================================================ */
+
+.grid-item {
+    overflow: hidden;              /* Coupe l'image si elle dépasse */
+    border-radius: var(--radius);
+}
+
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    display: block;                /* Enlève l'espace sous l'image */
+    object-fit: cover;             /* L'image REMPLIT la cellule sans se déformer */
+}
+
+/* ============================================================
+   5. ASSIGNATION DES ZONES
+   ============================================================ */
+
+.item-a { grid-area: a; }
+.item-b { grid-area: b; }
+.item-c { grid-area: c; }
+.item-d { grid-area: d; }
+.item-e { grid-area: e; }
+.item-f { grid-area: f; }
+
+/* ============================================================
+   6. RESPONSIVE : TABLETTE (≥ 640px) — 2 COLONNES
+   ============================================================ */
+
+@media (min-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "a c"
+            "a d"
+            "b d"
+            "e e"
+            "f f";
+        grid-template-rows: repeat(5, 1fr);
+    }
+}
+
+/* ============================================================
+   7. RESPONSIVE : DESKTOP (≥ 1024px) — 3 COLONNES
+   ============================================================ */
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: 1fr 1fr 1fr;
+
+        /* ⬇️ LA GRILLE MAGIQUE ⬇️ */
+        grid-template-areas:
+            "a c e"
+            "a c e"
+            "a d e"
+            "b d f"
+            "b d f";
+
+        grid-template-rows: repeat(5, 1fr);
+        gap: 12px;
+    }
+
+    /* Hauteur totale de la grille = 100vh (remplir la page) */
+    .grid {
+        height: calc(100vh - 120px);
+        max-height: 800px;
+    }
+}
+
+/* ============================================================
+   8. BONUS : HOVER EFFECT
+   ============================================================ */
+
+.grid-item {
+    cursor: pointer;
+}
+
+.grid-item img {
+    transition: transform 0.4s ease;
+}
+
+.grid-item:hover img {
+    transform: scale(1.05);       /* Léger zoom au survol */
+}
+
+/* ============================================================
+   9. BONUS : DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-bg: #141111;
+    }
+
+    .page h1 {
+        color: #9ca3af;
+    }
+}

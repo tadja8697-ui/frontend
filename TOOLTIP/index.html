@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Tooltip CSS pur pour navigation - HTML et CSS uniquement.">
+    <meta name="author" content="Your Name">
+
+    <meta property="og:title" content="Tooltip UI">
+    <meta property="og:description" content="Un tooltip en CSS pur, sans JavaScript.">
+    <meta property="og:type" content="website">
+
+    <title>Tooltip UI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="page">
+
+        <!-- ========== NAVIGATION ========== -->
+        <nav class="nav" aria-label="Navigation principale">
+
+            <ul class="nav-list">
+
+                <!-- Lien 1 : Home (tooltip simple) -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        Home
+                        <span class="tooltip" role="tooltip">
+                            Welcome to my homepage
+                        </span>
+                    </a>
+                </li>
+
+                <!-- Lien 2 : Projects (tooltip mis en avant) -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        Projects
+                        <span class="tooltip" role="tooltip">
+                            Here is everything I have built
+                        </span>
+                    </a>
+                </li>
+
+                <!-- Lien 3 : Blog -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        Blog
+                        <span class="tooltip" role="tooltip">
+                            Read my latest articles
+                        </span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </main>
+
+</body>
+</html>

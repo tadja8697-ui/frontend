@@ -1,0 +1,152 @@
+🔹 5.1 — Le label associé au champ
+html
+<label for="email">Email</label>
+<input id="email" type="email">
+💡 Règle absolue : for du <label> doit être identique à l'id de l'<input>.
+
+✅ Bénéfices :
+
+Cliquer sur le label → focus sur le champ.
+
+Lecteur d'écran annonce "Email, champ de saisie" (au lieu de "champ de saisie" tout court).
+
+🔹 5.2 — L'erreur accessible
+html
+<input
+    id="email"
+    aria-invalid="true"
+    aria-describedby="email-error"
+>
+<p id="email-error" role="alert">Email is already taken</p>
+Attribut	Rôle
+aria-invalid="true"	Signale que le champ contient une erreur
+aria-describedby="email-error"	Lie le message d'erreur au champ
+role="alert"	Annonce le message immédiatement aux lecteurs d'écran
+💡 Sans aria-describedby, le lecteur d'écran ne fait PAS le lien entre le champ et son message d'erreur. Crucial.
+
+🔹 5.3 — :focus-visible vs :focus
+css
+.form-group input:focus-visible {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+Sélecteur	Quand ?
+:focus	Toujours (souris + clavier)
+:focus-visible	Uniquement au clavier
+💡 Pourquoi :focus-visible ? Parce que quand on clique à la souris, on ne veut pas forcément voir un gros contour bleu. Mais au clavier (Tab), c'est vital.
+
+🔹 5.4 — Le bouton toggle password accessible
+html
+<button
+    type="button"
+    aria-label="Afficher le mot de passe"
+    aria-pressed="false"
+>
+    <svg aria-hidden="true">...</svg>
+</button>
+Attribut	Rôle
+type="button"	Empêche la soumission du formulaire (comportement par défaut)
+aria-label="..."	Donne un nom au bouton (car il ne contient qu'une icône)
+aria-pressed="false"	État "toggle" : false = caché, true = visible
+aria-hidden="true" sur le SVG	Le SVG est purement décoratif
+💡 L'énoncé insiste : "providing clear feedback on the current state (e.g., 'Password is hidden' or 'Password is visible')". Avec aria-pressed, tu réponds exactement à cette exigence.
+
+🔹 5.5 — Le cercle de progression en CSS pur
+css
+.progress-circle {
+    background: conic-gradient(
+        var(--color-text) 0% 65%,
+        var(--color-border) 65% 100%
+    );
+    position: relative;
+}
+
+.progress-circle::before {
+    content: '';
+    position: absolute;
+    inset: 8px;                  /* Rétrécit de 8px partout */
+    border-radius: 50%;
+    background-color: var(--color-bg);
+}
+💡 conic-gradient : dessine un dégradé circulaire (part du centre). En mettant deux couleurs avec un point d'arrêt fixe, on obtient un camembert.
+
+Ensuite, le ::before blanc crée l'anneau en masquant le centre.
+
+🔹 5.6 — inset: 8px (raccourci moderne)
+css
+.progress-circle::before {
+    inset: 8px;
+}
+= top: 8px; right: 8px; bottom: 8px; left: 8px;
+
+💡 Raccourci très pratique pour centrer des éléments dans un conteneur.
+
+🔹 5.7 — novalidate sur le formulaire
+html
+<form novalidate>
+💡 Désactive la validation HTML5 native. On préfère contrôler nous-mêmes l'affichage des erreurs (pour avoir un style cohérent). Sinon, le navigateur affiche un popup moche qu'on ne peut pas styler.
+
+🔹 5.8 — Le layout Grid asymétrique
+css
+.layout {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+}
+1.4fr : le formulaire prend 1.4 unité.
+
+1fr : le panneau latéral prend 1 unité.
+
+💡 Ratio ≈ 58% / 42%. Le formulaire est plus large, comme sur le mockup.
+
+🎯 ÉTAPE 7 : Comment vérifier ton travail
+1. Test visuel
+Ouvre index.html dans le navigateur.
+
+Navigue UNIQUEMENT au clavier : appuie sur Tab → tu dois voir le focus sur chaque élément.
+
+Utilise Entrée et Espace pour activer le bouton œil → il doit réagir.
+
+2. Test automatique
+Lighthouse (Chrome DevTools → Lighthouse) → catégorie Accessibility → tu veux 100/100.
+
+Axe DevTools (extension Chrome) → détecte les erreurs d'a11y.
+
+3. Test avec un lecteur d'écran
+Windows : NVDA (gratuit).
+
+macOS : VoiceOver (déjà installé, Cmd + F5).
+
+Linux : Orca.
+
+💡 Tape juste sur Tab avec le lecteur d'écran activé → il doit annoncer :
+
+"Full Name, champ de saisie, requis"
+"Email, champ de saisie, invalide, Email is already taken"
+
+Si tu entends ça → BRAVO, ton formulaire est accessible ! 🎉
+
+L'accessibilité en 6 règles d'or :
+
+1. LABEL associé
+   <label for="x">...</label>
+   <input id="x">
+
+2. ERREUR accessible
+   <input aria-invalid="true" aria-describedby="err-id">
+   <p id="err-id" role="alert">...</p>
+
+3. FOCUS VISIBLE
+   :focus-visible { outline + box-shadow }
+
+4. BOUTONS accessibles
+   <button type="button" aria-label="..." aria-pressed="false">
+
+5. JAMAIS de couleur seule
+   Rouge + icône + texte
+
+6. CONTRASTE ≥ 4.5:1
+   Tester sur contrast-ratio.com
+
+Pattern CSS clé :
+   .password-wrapper { position: relative }
+   .toggle-password { position: absolute; right: 8px; top: 50%; transform: translateY(-50%) }

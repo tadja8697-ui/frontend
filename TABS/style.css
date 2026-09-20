@@ -1,0 +1,193 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #9ca3af;
+    --color-bg: #ffffff;
+    --color-bg-alt: #f9fafb;
+    --color-bg-panel: #1a1a1a;
+    --color-border: #e5e7eb;
+    --color-accent: #1a1a1a;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 8px;
+    --radius-lg: 16px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.6;
+    padding: var(--space-xl) var(--space-md);
+    min-height: 100vh;
+}
+
+.page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.page h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+}
+
+.description {
+    color: var(--color-text);
+    font-size: 1rem;
+    margin-bottom: var(--space-lg);
+}
+
+/* ============================================================
+   3. LISTE DES ONGLETS
+   ============================================================ */
+
+.tabs-list {
+    display: flex;
+    gap: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-lg);
+    overflow-x: auto;              /* Scroll horizontal si trop étroit */
+}
+
+/* Chaque onglet */
+.tab {
+    position: relative;
+    background: none;
+    border: none;
+    padding: var(--space-sm) 0;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.tab:hover {
+    color: var(--color-text);
+}
+
+.tab:focus-visible {
+    outline: none;
+    color: var(--color-text);
+    box-shadow: 0 2px 0 0 var(--color-accent);
+}
+
+/* Onglet ACTIF : texte foncé + souligné */
+.tab.is-active {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.tab.is-active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;                    /* Aligné sur la bordure */
+    height: 2px;
+    background-color: var(--color-accent);
+}
+
+/* ============================================================
+   4. CONTENU DES ONGLETS
+   ============================================================ */
+
+.tabs-content {
+    position: relative;
+}
+
+/* Chaque panneau */
+.tab-panel {
+    background-color: var(--color-bg-panel);
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-panel p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* L'attribut hidden est natif HTML → on s'assure qu'il cache bien */
+.tab-panel[hidden] {
+    display: none;
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   5. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .tabs-list {
+        gap: var(--space-md);
+        /* Scroll horizontal sur mobile plutôt que retour à la ligne */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tab {
+        font-size: 0.9rem;
+    }
+
+    .tab-panel {
+        padding: var(--space-lg);
+        min-height: 140px;
+    }
+}
+
+/* ============================================================
+   6. BONUS : DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-text-muted: #6b7280;
+        --color-bg: #121212;
+        --color-bg-alt: #1f1f1f;
+        --color-bg-panel: #262626;
+        --color-border: #333333;
+        --color-accent: #f5f5f5;
+    }
+}

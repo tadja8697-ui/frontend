@@ -1,0 +1,239 @@
+🔹 4.1 — Le positionnement : relative + absolute
+css
+.nav-item {
+    position: relative;      /* Référentiel */
+}
+
+.tooltip {
+    position: absolute;
+    bottom: calc(100% + 12px);   /* Au-dessus du <li> */
+    left: 50%;
+    transform: translateX(-50%);
+}
+Décomposons :
+
+Propriété	Rôle
+position: relative sur .nav-item	Établit le point d'ancrage
+position: absolute sur .tooltip	Sort du flux, se positionne par rapport au parent
+bottom: calc(100% + 12px)	Place le bas du tooltip à 100% de la hauteur du parent + 12px d'espace
+left: 50%	Place le bord gauche du tooltip au milieu du parent
+transform: translateX(-50%)	Décale le tooltip de sa propre moitié → centrage parfait
+💡 Pourquoi bottom: 100% et pas top: 0 ?
+
+top: 0 place le tooltip dans le <li>, en haut.
+
+bottom: 100% place le tooltip au-dessus du <li>.
+
+C'est LA technique pour faire un tooltip qui monte.
+
+🔹 4.2 — La flèche en ::after
+css
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;                    /* Collé au bas du tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--color-tooltip-bg);
+}
+Le triangle magique :
+
+text
+    border-top: 6px solid black   ← Visible
+    ╱                           ╲
+   ╱  border-left   border-right ╲
+  ╱   transparent    transparent  ╲
+En rendant gauche/droite transparentes, seule la bordure du haut reste visible → un triangle vers le bas.
+
+💡 Astuce : si le tooltip est en dessous du lien, on inverse :
+
+css
+border-bottom: 6px solid black;   /* Triangle vers le haut */
+🔹 4.3 — Cacher/révéler avec opacity
+css
+.tooltip {
+    opacity: 0;
+    pointer-events: none;         /* Ne bloque pas les clics */
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.nav-item:hover .tooltip {
+    opacity: 1;
+    pointer-events: auto;
+}
+Pourquoi opacity et pas display: none ?
+
+display: none → display: block	opacity: 0 → opacity: 1
+❌ Pas d'animation possible	✅ Transition fluide
+Instantané (brutal)	Fluide (élégant)
+💡 pointer-events: none : empêche le tooltip invisible de capturer les clics. Sans ça, un clic sur le lien pourrait être bloqué par un tooltip invisible.
+
+🔹 4.4 — L'animation de glissement
+css
+.tooltip {
+    transform: translateX(-50%) translateY(4px);   /* État initial : 4px plus bas */
+}
+
+.nav-item:hover .tooltip {
+    transform: translateX(-50%) translateY(0);     /* État final : à sa place */
+}
+💡 Effet : le tooltip monte de 4px en apparaissant. C'est plus naturel qu'un simple fade.
+
+Décomposition du transform :
+
+translateX(-50%) → centrage horizontal (obligatoire, sinon le tooltip serait décalé).
+
+translateY(4px) → décalage vertical (l'effet de slide).
+
+translateY(0) → remonte à sa position normale.
+
+🔹 4.5 — Le sélecteur :focus-visible (ACCESSIBILITÉ)
+css
+.nav-link:focus-visible .tooltip {
+    opacity: 1;
+}
+💡 Important : les utilisateurs au clavier (Tab) doivent aussi voir le tooltip. Sinon → exclusion.
+
+Sans ça :
+
+Souris : ✅ tooltip visible au survol.
+
+Clavier : ❌ tooltip jamais visible.
+
+Avec :focus-visible, on traite les deux cas. C'est LA règle d'or de l'accessibilité.
+
+🔹 4.6 — Les séparateurs • en CSS pur
+css
+.nav-item:not(:last-child)::after {
+    content: '•';
+    position: absolute;
+    right: calc(-1 * var(--space-lg) / 2 - 0.3rem);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+💡 :not(:last-child) : on met un point sur tous les <li> sauf le dernier.
+pointer-events: none : le point n'est pas cliquable (c'est décoratif).
+::after : on injecte le point via CSS → pas de HTML pollué.
+
+🔹 4.7 — Le z-index: 10
+css
+.tooltip {
+    z-index: 10;
+}
+💡 Pourquoi ? Le tooltip doit passer au-dessus des autres liens de la nav. Sans z-index, il pourrait être masqué par les liens suivants.
+
+🔹 4.8 — Le white-space: nowrap
+css
+.tooltip {
+    white-space: nowrap;
+}
+💡 Empêche le texte du tooltip de passer à la ligne. Le tooltip s'adapte à la longueur du texte. C'est le comportement naturel des tooltips.
+
+🔹 4.9 — Les 3 variantes d'animation (bonus)
+Fade (par défaut) :
+
+css
+opacity: 0 → 1
+Slide :
+
+css
+opacity: 0 + translateX(10px) → opacity: 1 + translateX(0)
+→ Le tooltip glisse depuis la droite en apparaissant.
+
+Scale :
+
+css
+opacity: 0 + scale(0.8) → opacity: 1 + scale(1)
+→ Le tooltip grossit depuis le centre.
+
+💡 Astuce : transform-origin: bottom center fait que le scale se fait depuis le bas (au niveau de la flèche) → plus naturel.
+
+🔹 4.10 — role="tooltip" (accessibilité)
+html
+<span class="tooltip" role="tooltip">
+    Here is everything I have built
+</span>
+💡 Pour les lecteurs d'écran : role="tooltip" indique que c'est une info contextuelle.
+
+Pour aller plus loin (en JS plus tard) : lier via aria-describedby :
+
+html
+<a aria-describedby="tip-projects">Projects</a>
+<span id="tip-projects" role="tooltip">...</span>
+
+Le pattern "tooltip au survol" à retenir :
+
+1. HTML :
+   <li class="nav-item">
+     <a class="nav-link">
+       Projects
+       <span class="tooltip" role="tooltip">Texte</span>
+     </a>
+   </li>
+
+2. CSS :
+   .nav-item { position: relative; }           ← Référentiel
+   .tooltip {
+     position: absolute;
+     bottom: calc(100% + 12px);                ← Au-dessus
+     left: 50%;
+     transform: translateX(-50%);              ← Centré
+     opacity: 0;
+     pointer-events: none;
+     transition: opacity .25s, transform .25s;
+   }
+   .nav-item:hover .tooltip,
+   .nav-link:focus-visible .tooltip {
+     opacity: 1;
+     transform: translateX(-50%) translateY(0);
+   }
+
+3. Flèche :
+   .tooltip::after {
+     content: '';
+     position: absolute;
+     top: 100%;
+     left: 50%;
+     transform: translateX(-50%);
+     border: 6px solid transparent;
+     border-top-color: black;
+   }
+
+Variantes d'animation :
+   Fade : opacity
+   Slide : translateX/Y
+   Scale : transform: scale()
+
+💡 Astuce de prof
+Le pattern tooltip revient TOUT le temps en entreprise :
+
+Icônes d'aide dans les dashboards.
+
+Info-bulles sur les boutons.
+
+Menus de navigation complexes.
+
+Notifications discrètes.
+
+Maîtrise-le bien, tu le réutiliseras des dizaines de fois.
+
+Règles mentales à garder :
+Toujours position: relative sur le parent → sinon le tooltip va n'importe où.
+
+Toujours :focus-visible en plus de :hover → sinon exclusion des utilisateurs clavier.
+
+Toujours pointer-events: none sur l'état caché → sinon blocage des clics.
+
+Toujours transition sur les propriétés spécifiques (jamais all).
+
+Pour aller plus loin :
+Popper.js / Floating UI : la lib pro pour tooltips complexes (avec JS).
+
+Tippy.js : une lib populaire qui gère tous les cas (tooltips, popovers...).
+
+MDN Tooltip pattern ARIA : developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tooltip_role

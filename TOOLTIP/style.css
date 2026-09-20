@@ -1,0 +1,237 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-tooltip-bg: #1a1a1a;
+    --color-tooltip-text: #ffffff;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+
+    --radius: 8px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-lg);
+    line-height: 1.6;
+}
+
+.page {
+    width: 100%;
+    max-width: 700px;
+}
+
+/* ============================================================
+   3. LA NAVIGATION
+   ============================================================ */
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+    padding: var(--space-lg) 0;
+}
+
+/* Le <li> est le RÉFÉRENTIEL de positionnement */
+.nav-item {
+    position: relative;   /* ← LA ligne la plus importante */
+}
+
+/* Le lien */
+.nav-link {
+    display: inline-block;
+    position: relative;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: var(--radius);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: #f3f4f6;
+    color: #2563eb;
+}
+
+.nav-link:focus-visible {
+    outline: none;
+    background-color: #f3f4f6;
+    color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* Petit séparateur entre les liens (le • du mockup) */
+.nav-item:not(:last-child)::after {
+    content: '•';
+    position: absolute;
+    right: calc(-1 * var(--space-lg) / 2 - 0.3rem);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+/* ============================================================
+   4. LE TOOLTIP (caché par défaut)
+   ============================================================ */
+
+.tooltip {
+    /* Positionnement : au-dessus du lien */
+    position: absolute;
+    bottom: calc(100% + 12px);      /* 12px au-dessus du lien */
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);  /* Centré + léger décalage */
+
+    /* Apparence */
+    background-color: var(--color-tooltip-bg);
+    color: var(--color-tooltip-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius);
+    white-space: nowrap;            /* Une seule ligne */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    /* État initial : invisible */
+    opacity: 0;
+    pointer-events: none;           /* Ne bloque pas les clics */
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+
+    z-index: 10;                    /* Au-dessus de tout */
+}
+
+/* ============================================================
+   5. LA FLÈCHE (pseudo-élément ::after)
+   ============================================================ */
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;                      /* Juste sous le tooltip */
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Triangle vers le bas */
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--color-tooltip-bg);
+}
+
+/* ============================================================
+   6. APPARITION AU HOVER (et au focus clavier !)
+   ============================================================ */
+
+.nav-item:hover .tooltip,
+.nav-link:focus-visible .tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);   /* Remonte légèrement */
+    pointer-events: auto;
+}
+
+/* ============================================================
+   7. VARIANTES D'ANIMATION (bonus)
+   ============================================================ */
+
+/* Variante SLIDE-IN (glisse depuis la gauche) */
+.tooltip--slide {
+    left: auto;
+    right: 0;
+    transform: translateY(4px) translateX(10px);
+}
+
+.nav-item:hover .tooltip--slide,
+.nav-link:focus-visible .tooltip--slide {
+    transform: translateY(0) translateX(0);
+}
+
+/* Variante SCALE-IN (grossit depuis 0.8) */
+.tooltip--scale {
+    transform: translateX(-50%) scale(0.8);
+    transform-origin: bottom center;
+}
+
+.nav-item:hover .tooltip--scale,
+.nav-link:focus-visible .tooltip--scale {
+    transform: translateX(-50%) scale(1);
+}
+
+/* ============================================================
+   8. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .nav-list {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    /* Sur mobile, les séparateurs • sont masqués */
+    .nav-item:not(:last-child)::after {
+        display: none;
+    }
+
+    /* Tooltip : ajustement pour éviter le débordement */
+    .tooltip {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        max-width: 90vw;
+        white-space: normal;
+        text-align: center;
+    }
+}
+
+/* ============================================================
+   9. BONUS : DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-text-muted: #9ca3af;
+        --color-bg: #121212;
+        --color-tooltip-bg: #f5f5f5;
+        --color-tooltip-text: #1a1a1a;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+        background-color: #262626;
+    }
+
+    .tooltip::after {
+        border-top-color: var(--color-tooltip-bg);
+    }
+}

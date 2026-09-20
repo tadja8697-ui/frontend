@@ -1,0 +1,207 @@
+🔹 4.1 — La sélection des éléments
+javascript
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.tab-panel');
+Code	Signification
+document	Représente toute la page HTML
+querySelectorAll('.tab')	Cherche TOUS les éléments avec la classe tab
+const	Déclare une variable qui ne changera pas
+💡 Analogie : c'est comme sélectionner tous les crayons rouges dans une boîte. querySelectorAll te renvoie une liste d'éléments.
+
+⚠️ Différence :
+
+querySelector('.tab') → renvoie UN SEUL élément (le premier trouvé).
+
+querySelectorAll('.tab') → renvoie une NodeList (plusieurs éléments).
+
+🔹 4.2 — La boucle forEach
+javascript
+tabs.forEach(function (tab) {
+    // Faire quelque chose avec chaque "tab"
+});
+💡 Traduction : "Pour CHAQUE onglet dans la liste tabs, exécute cette fonction."
+
+Analogie : imagine une pile de copies. forEach te dit : "Prends chaque copie, une par une, et fais ce que je te dis."
+
+⚠️ NodeList a bien .forEach(), contrairement à ce qu'on lit parfois. Pas de souci ici.
+
+🔹 4.3 — classList : ajouter/retirer des classes
+javascript
+tab.classList.remove('is-active');     // Retire la classe
+tab.classList.add('is-active');        // Ajoute la classe
+tab.classList.toggle('is-active');     // Bascule (ajoute si absente, retire si présente)
+💡 classList = un outil qui gère les classes CSS d'un élément.
+
+Méthode	Rôle
+add('x')	Ajoute la classe x
+remove('x')	Retire la classe x
+toggle('x')	Ajoute si absente, retire si présente
+contains('x')	Renvoie true ou false
+💡 Analogie : c'est comme des étiquettes qu'on colle/décolle sur une boîte.
+
+🔹 4.4 — setAttribute et removeAttribute
+javascript
+tab.setAttribute('aria-selected', 'true');     // Écrit l'attribut
+panel.removeAttribute('hidden');                // Supprime l'attribut
+Méthode	Rôle
+setAttribute('nom', 'valeur')	Ajoute/modifie un attribut
+removeAttribute('nom')	Supprime un attribut
+getAttribute('nom')	Lit un attribut
+hasAttribute('nom')	Renvoie true/false si présent
+💡 Pourquoi setAttribute('aria-selected', 'true') ? Pour que les lecteurs d'écran sachent quel onglet est actif.
+
+💡 Pourquoi removeAttribute('hidden') ? Parce que l'attribut HTML hidden cache l'élément. Il faut le retirer pour l'afficher.
+
+🔹 4.5 — Les data-* attributs
+html
+<button data-tab="panel-1">First Tab</button>
+javascript
+const targetId = clickedTab.dataset.tab;   // "panel-1"
+const targetPanel = document.getElementById(targetId);
+💡 data-tab est un attribut personnalisé (HTML5). Il doit commencer par data-.
+
+En HTML : data-tab="panel-1"
+
+En JS : element.dataset.tab → "panel-1"
+
+⚠️ Conversion automatique : data-mon-super-attribut devient dataset.monSuperAttribut (camelCase).
+
+🔹 4.6 — addEventListener (le cœur de l'interactivité)
+javascript
+tab.addEventListener('click', function () {
+    activateTab(tab);
+});
+💡 Traduction : "Sur cet onglet, écoute l'événement click. Quand il se produit, exécute cette fonction."
+
+Analogie : c'est comme un policier qui surveille une porte. Dès que quelqu'un frappe (clic), il agit.
+
+Événement	Se déclenche quand...
+click	L'utilisateur clique
+keydown	Une touche est enfoncée
+mouseover	La souris passe dessus
+submit	Un formulaire est envoyé
+input	Un champ est modifié
+🔹 4.7 — getElementById
+javascript
+const targetPanel = document.getElementById('panel-1');
+💡 Renvoie UN SEUL élément par son id. Beaucoup plus rapide que querySelector.
+
+💡 Différence importante :
+
+#panel-1 (dans querySelector) = sélecteur CSS.
+
+'panel-1' (dans getElementById) = nom d'id sans le #.
+
+🔹 4.8 — La logique complète (récapitulatif)
+Quand l'utilisateur clique sur un onglet :
+
+On retire la classe is-active de TOUS les onglets.
+
+On cache TOUS les panneaux.
+
+On ajoute is-active à l'onglet cliqué.
+
+On trouve le panneau associé via data-tab.
+
+On affiche ce panneau.
+
+💡 Pourquoi tout désactiver d'abord ? Parce qu'on ne veut qu'un seul actif à la fois. C'est plus simple que de chercher "l'ancien actif" pour le désactiver.
+
+🔹 4.9 — L'animation CSS au changement
+css
+.tab-panel {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+💡 @keyframes = définition d'une animation.
+💡 animation: fadeIn 0.3s ease = "joue l'animation fadeIn en 0.3s avec un easing".
+
+⚠️ L'animation rejoue à chaque fois qu'on affiche le panneau car le navigateur re-déclenche l'animation quand l'élément redevient visible.
+
+🔹 4.10 — La navigation clavier (bonus)
+javascript
+tab.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        const nextIndex = (index + 1) % tabs.length;
+        tabs[nextIndex].focus();
+        activateTab(tabs[nextIndex]);
+    }
+});
+Décomposons :
+
+Élément	Signification
+keydown	Écoute les touches du clavier
+event.key	Renvoie la touche enfoncée ("ArrowRight", "Enter", "a"...)
+event.preventDefault()	Empêche le comportement par défaut
+(index + 1) % tabs.length	Modulo : revient à 0 après le dernier
+💡 Le modulo % : (3 + 1) % 4 = 0. Donc si on est sur le 4ème onglet et qu'on appuie sur →, on revient au 1er. Boucle infinie !
+
+💡 .focus() : donne le focus clavier à un élément. Crucial pour l'accessibilité.
+
+Les 6 commandes JS à retenir absolument :
+
+1. SÉLECTIONNER
+   document.querySelector('.class')       → 1 élément
+   document.querySelectorAll('.class')    → plusieurs
+   document.getElementById('id')          → par id
+
+2. MODIFIER LES CLASSES
+   el.classList.add('active')
+   el.classList.remove('active')
+   el.classList.toggle('active')
+
+3. MODIFIER LES ATTRIBUTS
+   el.setAttribute('aria-selected', 'true')
+   el.removeAttribute('hidden')
+   el.getAttribute('href')
+
+4. LIRE LES DATA-ATTRIBUTS
+   el.dataset.tab    ← pour data-tab="..."
+
+5. ÉCOUTER UN ÉVÉNEMENT
+   el.addEventListener('click', function() { ... })
+   el.addEventListener('keydown', function(e) { e.key ... })
+
+6. DONNER LE FOCUS
+   el.focus()
+
+Le pattern "tabs" :
+   1. Tout désactiver (retirer .is-active + cacher les panels)
+   2. Activer l'élément cliqué
+   3. Trouver le panel associé via data-tab
+   4. Afficher ce panel
+
+Règle d'or :
+   - Le JS change les CLASSES.
+   - Le CSS gère l'APPARENCE.
+   - Ne jamais mélanger les deux !
+
+C'est un moment charnière de ton apprentissage. Jusqu'ici, tu "décorais" des pages. Maintenant, tu leur donnes vie. 🎉
+
+Les 3 concepts à vraiment maîtriser :
+querySelector / querySelectorAll → trouver les éléments.
+
+addEventListener → réagir aux actions utilisateur.
+
+classList + dataset → modifier l'état.
+
+Presque TOUT le JavaScript du web repose sur ces 3 choses.
+
+Règles mentales à garder :
+"Le JS change l'état, le CSS affiche l'état."
+
+"Toujours penser accessibilité clavier (Tab, Entrée, Flèches)."
+
+"Une fonction = une seule responsabilité."
+
+Pour aller plus loin :
+JavaScript.info (le meilleur cours JS) : fr.javascript.info
+
+MDN DOM : developer.mozilla.org/fr/docs/Web/API/Document_Object_Model
+
+ARIA Tabs pattern : w3.org/WAI/ARIA/apg/patterns/tabs
