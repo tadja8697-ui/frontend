@@ -1,0 +1,250 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — <header> global vs <header> d'article
+html
+<!-- Header GLOBAL (site) -->
+<header>
+    <a href="/">MyBlog</a>
+    <nav>...</nav>
+</header>
+
+<main>
+    <article>
+        <!-- Header D'ARTICLE -->
+        <header>
+            <h1>Why Semantic HTML Matters</h1>
+            <p>Publié le <time>...</time></p>
+        </header>
+    </article>
+</main>
+💡 Il peut y avoir PLUSIEURS <header> sur une page :
+
+Le header global (en haut du <body>).
+
+Des headers de section (dans un <article>).
+
+⚠️ Ne pas confondre : un header global ≠ header d'article. Chacun a son scope.
+
+🔹 4.2 — aria-current="page"
+html
+<li><a href="/blog" aria-current="page">Blog</a></li>
+💡 aria-current="page" : indique l'élément actif de la navigation.
+
+Ce qu'un lecteur d'écran annonce : "Blog, lien, page actuelle".
+Ce qu'on peut styler plus tard :
+
+css
+[aria-current="page"] {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+}
+⚠️ C'est LA meilleure façon de marquer l'onglet actif — sans JS, sans classe CSS.
+
+🔹 4.3 — <time datetime="...">
+html
+<time datetime="2026-05-20">May 20, 2026</time>
+Attribut	Valeur
+datetime	Format ISO lisible par les machines (YYYY-MM-DD)
+Contenu	Format lisible par les humains
+💡 Avantages :
+
+Google comprend la date → bon pour le SEO.
+
+Les lecteurs d'écran peuvent l'annoncer correctement.
+
+Les navigateurs peuvent proposer d'ajouter au calendrier.
+
+🔹 4.4 — Le lien auteur
+html
+by <a href="/authors/alex-carter">Alex Carter</a>
+💡 Lien DESCRIPTIF : on peut imaginer cliquer sur le nom pour voir la page de l'auteur. Ce n'est pas "cliquez ici".
+
+🔹 4.5 — Le <figure> avec <img> + <figcaption>
+html
+<figure>
+    <img
+        src="mountains.jpg"
+        alt="Three mountain peaks silhouetted against the sky at sunrise."
+        width="600"
+        height="300"
+    >
+    <figcaption>Mountains at sunrise.</figcaption>
+</figure>
+Décomposons :
+
+Attribut	Rôle
+src	Chemin de l'image
+alt	Description pour lecteurs d'écran (obligatoire)
+width / height	Dimensions intrinsèques → évite le saut de layout
+<figcaption>	Légende visible (pas un remplacement de alt)
+⚠️ Piège : mettre alt="" → l'image est ignorée par les lecteurs d'écran (utile pour les images décoratives). Ici, ce n'est PAS décoratif → on décrit.
+
+💡 width et height : bonne pratique même si on ne style pas. Le navigateur réserve l'espace avant que l'image charge. Sans ça, la page "saute" quand l'image arrive.
+
+🔹 4.6 — Le <blockquote> avec <cite>
+html
+<blockquote>
+    <p>The best way to learn HTML is by writing it.</p>
+    <footer>
+        — <cite>MDN Web Docs</cite>
+    </footer>
+</blockquote>
+Décomposons :
+
+Balise	Rôle
+<blockquote>	Citation longue (bloc)
+<p>	Le texte cité
+<footer>	Conteneur de l'attribution (source)
+<cite>	Nom de la source (œuvre, site...)
+💡 Pourquoi un <footer> dans le blockquote ? C'est la convention HTML5 pour l'attribution. On pourrait mettre un <p> ou un <footer>, mais <footer> est sémantiquement correct pour "l'auteur/source en bas".
+
+⚠️ Ne pas confondre :
+
+<blockquote> : citation longue (bloc).
+
+<q> : citation courte (inline).
+
+🔹 4.7 — Le <code> en ligne
+html
+<p>
+    Use the <code>&lt;code&gt;</code> element for inline code,
+    like <code>&lt;main&gt;</code>.
+</p>
+Ce qu'on affiche : "Use the <code> element for inline code, like <main>."
+
+Pourquoi &lt; et &gt; ? Parce qu'on veut afficher littéralement <code> et <main>. Si on mettait <code> directement, le navigateur l'interpréterait comme une balise HTML.
+
+Caractère	Entité HTML
+<	&lt; (less than)
+>	&gt; (greater than)
+&	&amp;
+"	&quot;
+💡 Ces entités sont obligatoires dès qu'on veut afficher du HTML comme texte.
+
+🔹 4.8 — Le <pre><code> pour les blocs
+html
+<pre><code>&lt;p class="note"&gt;
+    Semantic HTML makes the web better for everyone.
+&lt;/p&gt;</code></pre>
+Décomposons :
+
+Balise	Rôle
+<pre>	Conserve les espaces, tabulations et sauts de ligne
+<code>	Signale que c'est du code (pour le style/la sémantique)
+💡 Pourquoi les deux ?
+
+<pre> seul → conserve le formatage mais sans sémantique de code.
+
+<code> seul → sémantique de code mais perd les espaces.
+
+Les deux ensemble → le meilleur des deux mondes ✅.
+
+⚠️ Pas d'indentation dans le <pre> ! L'indentation fait partie du rendu :
+
+html
+<!-- ❌ MAUVAIS : ça affiche des espaces bizarres -->
+<pre>
+    <code>...</code>
+</pre>
+
+<!-- ✅ BON : collé au bord -->
+<pre><code>...</code></pre>
+🔹 4.9 — Le lien descriptif dans "Learn more"
+html
+<p>
+    Read the
+    <a href="https://html.spec.whatwg.org/">
+        HTML Living Standard
+    </a>
+    to learn more about HTML.
+</p>
+💡 Ce lien est DESCRIPTIF :
+
+❌ "Read the spec here"
+
+❌ "Click here to read the spec"
+
+✅ "Read the HTML Living Standard"
+
+Test des liens isolés : on liste tous les liens d'une page. "HTML Living Standard" → on sait où ça mène. "Cliquez ici" → aucune idée.
+
+🔹 4.10 — Le <section> pour chaque H2
+html
+<section>
+    <h2>Benefits</h2>
+    <p>Using semantic HTML helps you:</p>
+    <ul>...</ul>
+</section>
+💡 <section> = "partie thématique avec un titre". Chaque H2 correspond à une section.
+
+⚠️ Piège : mettre <section> partout sans titre → mauvaise pratique. Sans H2 associé, utilisez un <div> (ou rien).
+
+Le pattern "article long-format" :
+
+1. STRUCTURE PAGE
+   <header> → logo + nav
+   <main>
+     <article>
+       <header> → h1 + date/auteur
+       <section> → h2 + contenu
+       ...
+     </article>
+   </main>
+   <footer> → copyright
+
+2. BALISES CLÉS
+   <p>                → paragraphe
+   <ul> / <ol>        → liste
+   <blockquote>       → citation longue
+     <cite>           → source
+   <code>             → code inline
+   <pre><code>        → bloc de code
+   <figure>           → illustration
+     <img alt>        → description a11y
+     <figcaption>     → légende visible
+   <time datetime>    → date ISO
+   <em> / <strong>    → sens (pas style)
+
+3. RÈGLES D'OR
+   - UN SEUL h1
+   - Ne pas sauter de niveaux (h1 → h2 → h3)
+   - Liens DESCRIPTIFS (jamais "cliquez ici")
+   - alt sur les images (obligatoire)
+   - Échapper < et > dans les blocs code
+
+Les 3 tests de validation :
+   1. validator.w3.org       → 0 erreur
+   2. HeadingsMap            → arbre cohérent
+   3. NVDA / VoiceOver        → annonce correcte
+
+💡 Astuce de prof
+Le HTML sémantique, c'est ce qui différencie un dev pro d'un amateur. Pourquoi ?
+
+Accessibilité : les lecteurs d'écran fonctionnent.
+
+SEO : Google comprend ton contenu.
+
+Maintenabilité : ton code est lisible dans 6 mois.
+
+Résilience : sans CSS, ta page reste lisible.
+
+Les 3 règles à graver :
+1. Le sens d'abord, le style après. <em> dit "accentue", le CSS décide "italique ou rouge".
+
+2. Un H1, puis on descend. Jamais de saut de niveau.
+
+3. Un lien se lit tout seul. Sorti de son contexte, il reste clair.
+
+Le test ultime :
+Désactive le CSS. Est-ce que ton article reste lisible ?
+
+Si tu vois un mur de texte sans structure → c'est raté.
+Si tu vois titres, listes, citations, légendes → c'est réussi. ✅
+
+Pour aller plus loin :
+HTML Living Standard : html.spec.whatwg.org
+
+MDN HTML elements reference : developer.mozilla.org/fr/docs/Web/HTML/Element
+
+WebAIM Semantic Structure : webaim.org/techniques/semanticstructure
+
+HeadingsMap (extension navigateur) : indispensable pour débugger la hiérarchie.

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Why semantic HTML matters: accessibility, SEO, and maintainable code. A practical guide with examples.">
+    <meta name="author" content="Alex Carter">
+
+    <title>Why Semantic HTML Matters - MyBlog</title>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header>
+        <a href="/">
+            <strong>MyBlog</strong>
+        </a>
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/blog" aria-current="page">Blog</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ========== MAIN ========== -->
+    <main>
+
+        <!-- ========== ARTICLE ========== -->
+        <article>
+
+            <!-- En-tête de l'article -->
+            <header>
+                <h1>Why Semantic HTML Matters</h1>
+
+                <p>
+                    <time datetime="2026-05-20">May 20, 2026</time>
+                    by <a href="/authors/alex-carter">Alex Carter</a>
+                </p>
+            </header>
+
+            <!-- Introduction -->
+            <p>
+                Semantic HTML is about using the right tags for the meaning
+                of your content. It improves accessibility, SEO, and makes
+                your code easier to maintain.
+            </p>
+
+            <!-- ---------- SECTION : Benefits ---------- -->
+            <section>
+                <h2>Benefits</h2>
+
+                <p>Using semantic HTML helps you:</p>
+
+                <ul>
+                    <li>Build more accessible websites</li>
+                    <li>Improve search engine understanding</li>
+                    <li>Write cleaner, more maintainable code</li>
+                </ul>
+            </section>
+
+            <!-- ---------- SECTION : Examples ---------- -->
+            <section>
+                <h2>Examples</h2>
+
+                <p>
+                    When you focus on meaning, not appearance, you write
+                    clearer content. Use
+                    <code>meaning matters</code>, not appearance, and mark
+                    <em>important</em> ideas clearly.
+                </p>
+
+                <!-- ---------- SOUS-SECTION : Illustration ---------- -->
+                <h3>Illustration</h3>
+
+                <figure>
+                    <img
+                        src="mountains.jpg"
+                        alt="Three mountain peaks silhouetted against the sky at sunrise."
+                        width="600"
+                        height="300"
+                    >
+                    <figcaption>Mountains at sunrise.</figcaption>
+                </figure>
+
+                <!-- Citation -->
+                <blockquote>
+                    <p>The best way to learn HTML is by writing it.</p>
+                    <footer>
+                        — <cite>MDN Web Docs</cite>
+                    </footer>
+                </blockquote>
+            </section>
+
+            <!-- ---------- SECTION : Code sample ---------- -->
+            <section>
+                <h2>Code sample</h2>
+
+                <p>
+                    Use the <code>&lt;code&gt;</code> element for inline code,
+                    like <code>&lt;main&gt;</code>.
+                    Here is a code block:
+                </p>
+
+                <pre><code>&lt;p class="note"&gt;
+    Semantic HTML makes the web better for everyone.
+&lt;/p&gt;</code></pre>
+            </section>
+
+            <!-- ---------- SECTION : Learn more ---------- -->
+            <section>
+                <h2>Learn more</h2>
+
+                <p>
+                    Read the
+                    <a href="https://html.spec.whatwg.org/">
+                        HTML Living Standard
+                    </a>
+                    to learn more about HTML.
+                </p>
+            </section>
+
+        </article>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer>
+        <p>© 2026 MyBlog. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

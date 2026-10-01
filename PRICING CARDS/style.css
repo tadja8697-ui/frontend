@@ -1,0 +1,329 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-bg-page: #f9fafb;
+    --color-border: #1a1a1a;
+    --color-border-featured: #dc2626;
+    --color-featured: #dc2626;
+    --color-featured-hover: #b91c1c;
+    --color-btn-bg: #f3f4f6;
+    --color-btn-bg-hover: #e5e7eb;
+    --color-focus: #2563eb;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 8px;
+    --radius-lg: 16px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg-page);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: var(--space-xl) var(--space-md);
+}
+
+.page {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* En-tête de page */
+.page-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: var(--space-sm);
+}
+
+.page-header p {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+}
+
+/* ============================================================
+   3. LA RANGÉE DE CARTES (FLEXBOX)
+   ============================================================ */
+
+.cards {
+    display: flex;
+    flex-direction: column;      /* Mobile : empilé */
+    gap: var(--space-lg);
+    /* align-items: stretch par défaut → les cartes prennent la même hauteur */
+}
+
+/* ============================================================
+   4. LA CARTE (le composant réutilisable)
+   ============================================================ */
+
+.card {
+    position: relative;          /* Pour positionner le badge en absolute */
+
+    display: flex;
+    flex-direction: column;       /* Permet margin-top: auto sur le bouton */
+    gap: var(--space-lg);
+
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl) var(--space-lg);
+}
+
+/* ============================================================
+   5. EN-TÊTE DE LA CARTE
+   ============================================================ */
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.card-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* Le prix (élément le PLUS visible) */
+.card-price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+}
+
+.price-amount {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--color-text);
+}
+
+.price-period {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
+/* La tagline */
+.card-tagline {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+/* ============================================================
+   6. SÉPARATEUR
+   ============================================================ */
+
+.card-divider {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 0;
+}
+
+/* ============================================================
+   7. LISTE DE FEATURES
+   ============================================================ */
+
+.card-features {
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.card-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+
+    font-size: 0.95rem;
+    color: var(--color-text);
+}
+
+/* La coche ✓ via pseudo-élément (pas d'image nécessaire) */
+.card-features li::before {
+    content: '✓';
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 20px;
+    height: 20px;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+
+    border: 1.5px solid var(--color-text);
+    border-radius: 50%;
+}
+
+/* ============================================================
+   8. LE BOUTON
+   ============================================================ */
+
+.card-btn {
+    /* ⚠️ La clé pour aligner les boutons en bas */
+    margin-top: auto;
+
+    display: block;
+    width: 100%;
+    padding: 0.85rem var(--space-md);
+
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+
+    background-color: var(--color-btn-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.1s ease;
+}
+
+/* État HOVER : changement de fond + ombre (pas que la couleur) */
+.card-btn:hover {
+    background-color: var(--color-btn-bg-hover);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* État FOCUS clavier : contour bleu visible */
+.card-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+/* État ACTIVE : effet "pressé" */
+.card-btn:active {
+    transform: scale(0.98);
+}
+
+/* ============================================================
+   9. LA CARTE "FEATURED" (Pro)
+   ============================================================ */
+
+.card--featured {
+    border-color: var(--color-border-featured);
+    /* Sur desktop, elle sera légèrement plus grande (transform: scale) */
+}
+
+/* Le badge "Most popular" */
+.card-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 0.35rem 1rem;
+    background-color: var(--color-featured);
+    color: white;
+
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    border-radius: 999px;
+}
+
+/* Le prix en rouge sur la carte featured */
+.card--featured .price-amount,
+.card--featured .card-features li::before {
+    color: var(--color-featured);
+    border-color: var(--color-featured);
+}
+
+/* Le bouton rouge */
+.card--featured .card-btn {
+    background-color: var(--color-featured);
+    color: white;
+    border-color: var(--color-featured);
+}
+
+.card--featured .card-btn:hover {
+    background-color: var(--color-featured-hover);
+    border-color: var(--color-featured-hover);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.card--featured .card-btn:focus-visible {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.4);
+}
+
+/* ============================================================
+   10. RESPONSIVE : TABLETTE + DESKTOP (≥ 768px)
+   ============================================================ */
+
+@media (min-width: 768px) {
+    .cards {
+        flex-direction: row;      /* ← Les cartes s'alignent en ligne */
+        align-items: stretch;     /* ← Même hauteur pour toutes */
+        gap: var(--space-lg);
+    }
+
+    .card {
+        flex: 1;                  /* Chaque carte prend la même largeur */
+    }
+
+    /* La carte featured est légèrement plus grande */
+    .card--featured {
+        transform: scale(1.03);
+        z-index: 1;               /* Passe au-dessus des autres */
+    }
+}
+
+/* ============================================================
+   11. DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-text-muted: #9ca3af;
+        --color-bg: #1a1a1a;
+        --color-bg-page: #121212;
+        --color-border: #f5f5f5;
+        --color-btn-bg: #262626;
+        --color-btn-bg-hover: #333333;
+    }
+
+    .card-divider {
+        border-top-color: #333333;
+    }
+}

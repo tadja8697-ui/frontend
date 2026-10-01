@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Composant Custom Dropdown accessible en HTML, CSS et JavaScript.">
+    <meta name="author" content="Your Name">
+
+    <title>Custom Dropdown</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="page">
+
+        <h1>Custom Dropdown</h1>
+
+        <!-- ========== LE COMPOSANT ========== -->
+        <div class="dropdown" id="dropdown">
+
+            <!-- Trigger (le bouton visible) -->
+            <button
+                type="button"
+                class="dropdown-trigger"
+                id="dropdown-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="dropdown-menu"
+            >
+                <span class="dropdown-label" id="dropdown-label">
+                    Select an Item
+                </span>
+
+                <!-- Chevron (flèche) -->
+                <svg
+                    class="dropdown-chevron"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+
+            <!-- Menu (liste des options) -->
+            <ul
+                class="dropdown-menu"
+                id="dropdown-menu"
+                role="listbox"
+                aria-labelledby="dropdown-trigger"
+                tabindex="-1"
+            >
+                <li class="dropdown-item" role="option" aria-selected="false" data-value="first">
+                    First Item
+                </li>
+                <li class="dropdown-item" role="option" aria-selected="false" data-value="second">
+                    Second Item
+                </li>
+                <li class="dropdown-item" role="option" aria-selected="false" data-value="third">
+                    Third Item
+                </li>
+                <li class="dropdown-item" role="option" aria-selected="false" data-value="fourth">
+                    Fourth Item
+                </li>
+                <li class="dropdown-item" role="option" aria-selected="false" data-value="fifth">
+                    Fifth Item
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- Indication pour tester -->
+        <p class="hint">Cliquez pour ouvrir, cliquez à l'extérieur pour fermer.</p>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

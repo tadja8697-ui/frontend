@@ -1,0 +1,253 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — Le <form> avec action et method
+html
+<form action="https://example.com/contact" method="post">
+Attribut	Rôle
+action	URL où envoyer les données
+method="post"	Méthode HTTP (données dans le corps de la requête)
+method="get"	Méthode HTTP (données dans l'URL)
+POST vs GET :
+
+GET	POST
+Données dans	L'URL (?name=Ada&email=...)	Le corps de la requête
+Visible dans l'URL	✅ Oui	❌ Non
+Mis en cache	✅ Oui	❌ Non
+Utilisation	Recherche, filtres	Envoi de données sensibles
+💡 Règle simple : dès qu'on modifie quelque chose (créer un compte, envoyer un message), c'est POST. Sinon GET.
+
+🔹 4.2 — L'association for / id
+html
+<label for="full-name">Full name</label>
+<input type="text" id="full-name" name="fullName">
+💡 Ce qui se passe au clic :
+
+L'utilisateur clique sur "Full name" → le focus va sur l'input. ✅
+
+Un lecteur d'écran annonce "Full name, champ de saisie, obligatoire".
+
+⚠️ Le for doit correspondre EXACTEMENT à l'id (attention aux typos !).
+
+🔹 4.3 — L'attribut name (crucial)
+html
+<input type="text" id="full-name" name="fullName">
+Ce que le serveur reçoit :
+
+text
+fullName=Ada+Lovelace
+⚠️ Différence critique :
+
+id : identifiant côté client (pour le CSS, le label, JS).
+
+name : identifiant côté serveur (la clé dans la requête HTTP).
+
+Sans name → la donnée est complètement ignorée à l'envoi. 😱
+
+🔹 4.4 — autocomplete : la magie du navigateur
+html
+<input type="text" name="fullName" autocomplete="name">
+<input type="email" name="email" autocomplete="email">
+Valeur	Comportement
+name	Propose le nom enregistré
+email	Propose l'email enregistré
+tel	Propose le téléphone
+new-password	Propose un mot de passe fort
+current-password	Propose le mot de passe actuel
+postal-code	Propose le code postal
+street-address	Propose l'adresse
+💡 Pourquoi c'est important ?
+
+UX : l'utilisateur remplit en 1 clic.
+
+Accessibilité : aide les utilisateurs avec handicap moteur.
+
+Sécurité : encourage les mots de passe forts.
+
+🔹 4.5 — Le <select> avec placeholder
+html
+<select id="subject" name="subject" required>
+    <option value="">-- Please choose an option --</option>
+    <option value="general">General inquiry</option>
+    <option value="support">Technical support</option>
+    <option value="feedback">Feedback</option>
+</select>
+💡 Astuce du placeholder : la première option avec value="" sert de placeholder. Avec required, le navigateur bloque si on ne change pas.
+
+⚠️ Sans value="" vide, la 1ère option serait valide par défaut → l'utilisateur pourrait soumettre sans choisir.
+
+🔹 4.6 — Le <textarea> avec minlength
+html
+<textarea
+    id="message"
+    name="message"
+    rows="8"
+    cols="50"
+    minlength="20"
+    maxlength="1000"
+    required
+></textarea>
+Attribut	Rôle
+rows / cols	Dimensions initiales (visible)
+minlength="20"	Minimum 20 caractères pour soumettre
+maxlength="1000"	Maximum 1000 caractères
+required	Champ obligatoire
+⚠️ Piège : <textarea> n'est PAS une balise auto-fermante. Il faut toujours une balise fermante.
+
+html
+<!-- ✅ BON -->
+<textarea></textarea>
+
+<!-- ❌ FAUX (ne marche pas comme prévu) -->
+<textarea />
+🔹 4.7 — Le <fieldset> + <legend> pour les radios
+html
+<fieldset>
+    <legend>How did you hear about us?</legend>
+
+    <input type="radio" id="source-search" name="source" value="search">
+    <label for="source-search">Search engine</label>
+    ...
+</fieldset>
+Décomposons :
+
+Balise	Rôle
+<fieldset>	Groupe de champs associés
+<legend>	Titre du groupe (annoncé par les lecteurs d'écran)
+name="source" (identique)	Groupe logique (une seule réponse possible)
+value="..." (différent)	Ce qui est envoyé au serveur
+💡 Ce qu'un lecteur d'écran annonce :
+
+"How did you hear about us? Groupe. Search engine, radio button, 1 sur 4. Non coché."
+
+Sans <fieldset> :
+
+"Search engine, radio button, non coché."
+
+L'utilisateur ne sait PAS à quoi il répond. 🚫
+
+🔹 4.8 — Le <input type="radio"> (même name !)
+html
+<input type="radio" name="source" value="search">
+<input type="radio" name="source" value="social">
+<input type="radio" name="source" value="friend">
+⚠️ Règle absolue :
+
+Même name → UN SEUL choix possible.
+
+value différent → identifie l'option choisie.
+
+Ce que le serveur reçoit : source=social (uniquement la valeur choisie).
+
+🔹 4.9 — Le checkbox et sa value
+html
+<input type="checkbox" id="newsletter" name="newsletter" value="yes">
+<label for="newsletter">Subscribe to our monthly newsletter</label>
+Ce que le serveur reçoit :
+
+Si coché : newsletter=yes
+
+Si non coché : rien (pas de clé newsletter)
+
+💡 Règle : pour un checkbox, il faut toujours préciser value. Sinon, la valeur par défaut est "on" (peu explicite).
+
+🔹 4.10 — Le <button type="submit">
+html
+<button type="submit">Send message</button>
+⚠️ Toujours préciser type="submit" :
+
+Sans type, un <button> dans un form est submit par défaut.
+
+Mais c'est implicite → mieux vaut l'écrire explicitement.
+
+💡 Alternative : <input type="submit" value="Send message"> (plus ancien, moins flexible).
+
+🔹 4.11 — La validation navigateur (UX, pas sécurité)
+Ce que le navigateur fait automatiquement :
+
+required → bloque si vide.
+
+type="email" → vérifie le format email.
+
+minlength="20" → bloque si < 20 caractères.
+
+maxlength="1000" → bloque si > 1000 caractères.
+
+Message d'erreur : le navigateur affiche une bulle avec un texte par défaut.
+
+⚠️ RÈGLE DE SÉCURITÉ ABSOLUE :
+
+Un utilisateur peut modifier le HTML, désactiver JS, envoyer avec curl...
+
+La validation côté client est pour l'UX. Le serveur DOIT valider.
+
+Analogie : c'est comme un formulaire papier à l'accueil d'une entreprise. Il guide l'utilisateur, mais l'employé au back-office revalide tout.
+
+Le pattern "formulaire accessible" :
+
+1. STRUCTURE
+   <form action="..." method="post">
+       <!-- Chaque champ : label + input associés -->
+       <label for="x">Label</label>
+       <input id="x" name="x" type="..." required>
+
+       <!-- Groupe de radios -->
+       <fieldset>
+           <legend>Titre du groupe</legend>
+           <input type="radio" name="grp" value="a" id="ra">
+           <label for="ra">Option A</label>
+           ...
+       </fieldset>
+
+       <!-- Checkbox -->
+       <input type="checkbox" name="cb" value="yes" id="cb">
+       <label for="cb">...</label>
+
+       <!-- Submit -->
+       <button type="submit">Send message</button>
+   </form>
+
+2. RÈGLES D'OR
+   - TOUJOURS label + for/id
+   - TOUJOURS name sur chaque champ
+   - Radios : même name + fieldset + legend
+   - Placeholder ≠ Label
+   - Validation client = UX, pas sécurité
+
+3. VALIDATION HTML5
+   required, minlength, maxlength, type="email"...
+   → Bloque côté client, MAIS le serveur revalide.
+
+4. TEST ULTIME
+   DevTools → Network → Preserve log → Soumettre
+   → Voir les paires name=value devenir une requête HTTP.
+
+💡 Astuce de prof
+Les formulaires sont la porte d'entrée du backend. Une fois que tu maîtrises ce pattern, tu peux :
+
+Envoyer un email (avec un backend).
+
+Créer un compte utilisateur.
+
+Poster un commentaire.
+
+Sauvegarder des données en base.
+
+Les 3 règles à graver :
+1. Label obligatoire. Placeholder optionnel.
+
+2. name sur chaque champ. Sans exception.
+
+3. La validation HTML5, c'est du confort. Le serveur, c'est la sécurité.
+
+Le test mental ultime :
+Ferme les yeux. Imagine que tu remplis ton formulaire avec un lecteur d'écran.
+
+Chaque champ doit être annoncé clairement avec son label et son état. Sinon, il n'est pas accessible.
+
+Pour aller plus loin :
+MDN Forms Guide : developer.mozilla.org/fr/docs/Learn/Forms
+
+WebAIM Forms : webaim.org/techniques/forms
+
+W3C Forms Tutorial : w3.org/WAI/tutorials/forms/
+
+HTML Spec Forms : html.spec.whatwg.org/multipage/forms.html

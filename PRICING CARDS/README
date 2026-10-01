@@ -1,0 +1,211 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — Les hauteurs égales (le concept clé)
+css
+.cards {
+    display: flex;
+    align-items: stretch;      /* ← Par défaut, mais on le rappelle */
+}
+
+.card {
+    display: flex;
+    flex-direction: column;    /* ← Étape 1 */
+}
+
+.card-btn {
+    margin-top: auto;          /* ← Étape 2 : pousse le bouton en bas */
+}
+Décomposons la magie :
+
+.cards en flex row → les 3 cartes sont sur la même ligne.
+
+align-items: stretch → elles prennent toutes la même hauteur (celle de la plus grande).
+
+.card en flex column → les enfants s'empilent verticalement.
+
+margin-top: auto sur le bouton → "prends tout l'espace disponible au-dessus de toi". Résultat : le bouton est collé en bas.
+
+💡 Sans ça, si Basic a 4 features et Business en a 6, la carte Basic serait plus courte → les boutons seraient décalés. Avec ça, les 3 boutons sont alignés.
+
+🔹 4.2 — Le box model propre
+css
+.card {
+    padding: var(--space-xl) var(--space-lg);    /* Intérieur */
+}
+
+.cards {
+    gap: var(--space-lg);                         /* Entre les cartes */
+}
+
+.card {
+    gap: var(--space-lg);                         /* Entre les enfants */
+}
+Règles respectées :
+
+✅ padding pour l'espace intérieur de la carte.
+
+✅ gap pour l'espace entre les cartes.
+
+✅ gap pour l'espace entre les enfants de la carte.
+
+❌ Zéro margin pour espacer les siblings.
+
+💡 Pourquoi ? margin crée des collisions quand deux éléments ont des marges adjacentes (margin collapsing). gap ne fait jamais ça. C'est plus propre.
+
+🔹 4.3 — La hiérarchie typographique
+css
+.price-amount {
+    font-size: 3rem;           /* ← LE plus grand */
+    font-weight: 800;
+}
+
+.card-name {
+    font-size: 1.5rem;         /* ← Moyen */
+    font-weight: 700;
+}
+
+.card-tagline,
+.card-features li {
+    font-size: 0.95rem;        /* ← Petit */
+    font-weight: 400;
+}
+Échelle visuelle :
+
+text
+Prix        → 3rem   (48px)   ← Élément dominant
+Nom du plan → 1.5rem (24px)
+Tagline     → 0.95rem (15px)
+Features    → 0.95rem (15px)
+💡 Règle d'or de la typo : le regard doit tomber naturellement sur le prix → c'est ce que le client cherche.
+
+🔹 4.4 — Le badge "Most popular" en position absolue
+css
+.card {
+    position: relative;        /* Référentiel */
+}
+
+.card-badge {
+    position: absolute;
+    top: -14px;                /* Dépasse en HAUT de la carte */
+    left: 50%;
+    transform: translateX(-50%);   /* Centré horizontalement */
+}
+Décomposons :
+
+position: relative sur la carte → établit un référentiel.
+
+top: -14px → le badge sort de la carte vers le haut.
+
+left: 50% + translateX(-50%) → centrage parfait.
+
+💡 Astuce : le badge dépasse de la carte (top négatif). Pour qu'il ne soit pas coupé, on n'a pas mis overflow: hidden sur la carte. C'est volontaire.
+
+🔹 4.5 — Les coches ✓ en CSS pur
+css
+.card-features li::before {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--color-text);
+    border-radius: 50%;
+}
+💡 Zéro image nécessaire : on utilise un caractère Unicode (✓ = U+2713) dans un cercle dessiné en CSS.
+
+Avantages :
+
+✅ Pas de requête HTTP (rapide).
+
+✅ Scale parfait (vectoriel).
+
+✅ Colorable avec color et border-color.
+
+🔹 4.6 — Les états du bouton (hover/focus/active)
+css
+.card-btn:hover {
+    background-color: var(--color-btn-bg-hover);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);   /* ← Ne repose PAS que sur la couleur */
+}
+
+.card-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);  /* Contour bleu clavier */
+}
+
+.card-btn:active {
+    transform: scale(0.98);                        /* Effet pressé */
+}
+Pourquoi 3 états ?
+
+État	Quand	Ce qui change
+:hover	Souris dessus	Fond + ombre
+:focus-visible	Navigation clavier (Tab)	Contour bleu
+:active	Clic en cours	Léger scale
+💡 Règle d'accessibilité : le :hover ne doit pas reposer uniquement sur la couleur. On ajoute une ombre → visible même pour un daltonien.
+
+💡 :focus-visible vs :focus :
+
+:focus se déclenche aussi au clic souris (moche).
+
+:focus-visible uniquement au clavier (propre).
+
+🔹 4.7 — La carte featured (Pro)
+css
+.card--featured {
+    border-color: var(--color-featured);      /* Bordure rouge */
+}
+
+.card--featured .price-amount {
+    color: var(--color-featured);              /* Prix rouge */
+}
+
+.card--featured .card-btn {
+    background-color: var(--color-featured);   /* Bouton rouge */
+    color: white;
+}
+
+@media (min-width: 768px) {
+    .card--featured {
+        transform: scale(1.03);                /* 3% plus grande */
+        z-index: 1;                            /* Au-dessus des autres */
+    }
+}
+💡 Le pattern BEM card--featured : on modifie juste quelques propriétés sans dupliquer tout le CSS.
+
+Pourquoi scale(1.03) ? Pour attirer l'œil subtilement. Pas trop gros, sinon ça casse le rythme visuel.
+
+⚠️ scale uniquement sur desktop : sur mobile, les cartes sont empilées → agrandir une carte serait bizarre.
+
+🔹 4.8 — La structure sémantique
+html
+<section class="cards" aria-label="Plans tarifaires">
+    <article class="card">
+        <header class="card-header">
+            <h2>Basic</h2>
+            <p class="card-price">...</p>
+        </header>
+        <ul class="card-features">...</ul>
+        <button>Choose Basic</button>
+    </article>
+    ...
+</section>
+Balise	Rôle
+<section>	Regroupe les 3 cartes
+<article>	Chaque carte est autonome → on peut la copier ailleurs
+<header>	En-tête de la carte (nom + prix + tagline)
+<h2>	Titre du plan
+<ul>	Liste des features
+💡 aria-label sur la section : donne un nom au groupe (utile pour les lecteurs d'écran).
+
+🔹 4.9 — Le flex: 1 pour des cartes égales
+css
+@media (min-width: 768px) {
+    .card {
+        flex: 1;
+    }
+}
+💡 flex: 1 = "prends 1 part de l'espace disponible". Sur 3 cartes, chacune fait 1/3.
+
+Alternative : flex: 1 1 0 (plus explicite) → flex-grow: 1, flex-shrink: 1, flex-basis: 0.
+

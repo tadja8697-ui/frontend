@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Theme Switcher with CSS Variables - Light, Dark and Custom themes.">
+    <meta name="author" content="Your Name">
+
+    <title>Theme Switcher with CSS Variables</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="page">
+
+        <!-- ============================================== -->
+        <!-- LE SWITCHER (3 radios + 3 labels)              -->
+        <!-- ============================================== -->
+        <fieldset class="theme-switcher" aria-label="Choose a theme">
+            <legend class="sr-only">Choose a theme</legend>
+
+            <!-- Les 3 radios (cachés visuellement) -->
+            <input
+                type="radio"
+                name="theme"
+                id="theme-light"
+                class="theme-radio"
+                checked
+            >
+            <input
+                type="radio"
+                name="theme"
+                id="theme-dark"
+                class="theme-radio"
+            >
+            <input
+                type="radio"
+                name="theme"
+                id="theme-custom"
+                class="theme-radio"
+            >
+
+            <!-- Les 3 labels visibles -->
+            <div class="theme-options">
+                <label for="theme-light" class="theme-option">
+                    Light
+                </label>
+                <label for="theme-dark" class="theme-option">
+                    Dark
+                </label>
+                <label for="theme-custom" class="theme-option">
+                    Custom
+                </label>
+            </div>
+        </fieldset>
+
+        <!-- ============================================== -->
+        <!-- LA CARTE (identique pour tous les thèmes)      -->
+        <!-- ============================================== -->
+        <article class="card">
+            <h1 class="card-title">Hello, World!</h1>
+
+            <p class="card-text">
+                This is a simple card that changes theme with CSS variables.
+            </p>
+
+            <button type="button" class="card-button">
+                Primary Button
+            </button>
+        </article>
+
+    </main>
+
+</body>
+</html>

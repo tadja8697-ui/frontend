@@ -1,0 +1,233 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — alt : la description invisible
+html
+<img
+    src="sunset.jpg"
+    alt="Mountain peaks silhouetted against an orange sky at sunset, with mist in the valley."
+>
+Les 4 règles d'un bon alt :
+
+Règle	Exemple
+Décrire le CONTENU	✅ "Un chat noir sur un banc"
+Ne pas dire "image de..."	❌ "Image d'un chat" (redondant)
+Concis (< 125 caractères)	✅ Court et précis
+Éviter les détails inutiles	✅ "Chat noir" (pas la marque du collier)
+⚠️ Mauvais alt :
+
+html
+<img src="sunset.jpg" alt="sunset.jpg">          <!-- ❌ Le nom du fichier -->
+<img src="sunset.jpg" alt="image">               <!-- ❌ Trop vague -->
+<img src="sunset.jpg" alt="cliquez ici">         <!-- ❌ Sans contexte -->
+✅ Bon alt :
+
+html
+<img src="sunset.jpg" alt="Montagnes au coucher du soleil, avec brume dans la vallée.">
+🔹 4.2 — <figcaption> : la légende visible
+html
+<figure>
+    <img src="sunset.jpg" alt="...">
+    <figcaption>Sunset over the Alps — Chamonix, France.</figcaption>
+</figure>
+💡 Rôle du <figcaption> :
+
+Donner un contexte (lieu, date, auteur...).
+
+Légender une image, un schéma, un graphique.
+
+Est visible par tout le monde.
+
+⚠️ <figcaption> ne remplace PAS alt :
+
+html
+<!-- ❌ MAUVAIS : le figcaption remplace l'alt -->
+<figure>
+    <img src="x.jpg">
+    <figcaption>Un beau coucher de soleil</figcaption>
+</figure>
+
+<!-- ✅ BON : alt + figcaption -->
+<figure>
+    <img src="x.jpg" alt="Montagnes au coucher du soleil.">
+    <figcaption>Coucher de soleil sur les Alpes, octobre 2024.</figcaption>
+</figure>
+🔹 4.3 — width et height : l'anti-CLS
+html
+<img src="photo.jpg" alt="..." width="800" height="600">
+Ce qui se passe dans le navigateur :
+
+Le navigateur lit le HTML.
+
+Il voit width="800" height="600".
+
+Il réserve un rectangle de 800×600.
+
+Il calcule le ratio (4:3).
+
+L'image arrive → elle remplit l'espace réservé.
+
+Rien ne bouge. ✅
+
+SANS width/height :
+
+Le navigateur lit le HTML.
+
+Il ne sait pas la taille.
+
+Il met 0px de hauteur.
+
+L'image arrive → BAM, tout saute. ❌
+
+⚠️ Piège : width/height en HTML ≠ taille d'affichage. C'est le ratio qui compte.
+
+Exemple : si tu mets width="800" height="600" en HTML et width: 100% en CSS, l'image s'affiche sur toute la largeur du parent et garde le ratio 4:3.
+
+🔹 4.4 — loading="lazy" : le chargement différé
+html
+<img src="photo.jpg" alt="..." loading="lazy">
+💡 Sans lazy : le navigateur charge TOUTES les images d'un coup → page lente.
+💡 Avec lazy : il ne charge que les images visibles à l'écran → page rapide. ✅
+
+⚠️ Ne pas mettre lazy sur les images du haut de page (elles sont visibles tout de suite). Réservé aux images plus bas.
+
+🔹 4.5 — L'image décorative : alt=""
+html
+<img src="decoration.jpg" alt="" width="1200" height="100">
+💡 alt="" (vide) ≠ pas d'attribut alt :
+
+Cas	Comportement du lecteur d'écran
+alt=""	Ignore complètement l'image ✅
+Pas de alt	Lit le nom du fichier → pollution sonore ❌
+Analogie : alt="" dit "cette image ne sert à rien pour comprendre la page, passe". Sans alt, le lecteur d'écran essaie de décrire → bruit inutile.
+
+💡 Quand utiliser alt="" ?
+
+Séparateurs visuels (lignes décoratives).
+
+Motifs d'arrière-plan.
+
+Images accompagnées d'une légende descriptive proche.
+
+🔹 4.6 — La balise <video> complète
+html
+<video
+    controls
+    poster="thumbnail.jpg"
+    width="1280"
+    height="720"
+    preload="metadata"
+>
+    <source src="video.mp4" type="video/mp4">
+    <source src="video.webm" type="video/webm">
+    Votre navigateur ne supporte pas la vidéo.
+</video>
+Décomposons chaque attribut :
+
+Attribut	Rôle
+controls	Affiche les contrôles (play, pause, volume, plein écran)
+poster	Image affichée avant lecture (miniature)
+width/height	Réserve l'espace (anti-CLS)
+preload="metadata"	Charge seulement les infos de base (durée, dimensions)
+💡 preload :
+
+"none" → ne charge rien (économie de données).
+
+"metadata" → juste les métadonnées (recommandé).
+
+"auto" → charge tout d'avance.
+
+🔹 4.7 — Les <source> multiples
+html
+<source src="video.mp4" type="video/mp4">
+<source src="video.webm" type="video/webm">
+💡 Le navigateur essaie dans l'ORDRE :
+
+Il lit le premier <source> (video.mp4).
+
+Il vérifie s'il supporte video/mp4.
+
+Si oui → il l'utilise.
+
+Si non → il passe au suivant.
+
+Utilité : donner plusieurs formats pour maximiser la compatibilité.
+
+🔹 4.8 — Le texte de fallback
+html
+<video controls>
+    <source src="video.mp4" type="video/mp4">
+    Votre navigateur ne supporte pas la balise vidéo.
+    <a href="video.mp4">Télécharger la vidéo</a>.
+</video>
+💡 Entre <video> et </video>, on met du contenu HTML qui s'affiche si le navigateur ne supporte pas <video>.
+
+Navigateurs modernes : tous supportent <video> → le fallback ne s'affiche jamais.
+
+MAIS : c'est obligatoire pour l'accessibilité et les vieux navigateurs.
+
+🔹 4.9 — Le <figure> autour de la vidéo
+html
+<figure>
+    <video controls poster="...">...</video>
+    <figcaption>Aerial footage captured during a hiking trip.</figcaption>
+</figure>
+💡 <figure> fonctionne aussi pour la vidéo ! Ce n'est pas réservé aux images.
+
+Bénéfice : la vidéo peut avoir sa légende (<figcaption>), ce qui donne du contexte.
+
+🔹 4.10 — Les URLs d'images placeholder
+Pour ce projet, j'utilise picsum.photos :
+
+html
+<img src="https://picsum.photos/id/1018/800/600" alt="...">
+💡 picsum.photos = service gratuit de photos placeholder.
+
+/id/1018 → une photo spécifique (stable).
+
+/800/600 → dimensions demandées.
+
+Sans /id, photo aléatoire.
+
+Alternatives :
+
+placehold.co → images avec du texte.
+
+loremflickr.com → photos de Flickr.
+
+Tes propres images → mets-les dans un dossier images/.
+
+Le pattern "média accessible" :
+
+1. IMAGE INFORMATIVE
+   <figure>
+       <img src="..." alt="Description utile"
+            width="800" height="600" loading="lazy">
+       <figcaption>Légende visible</figcaption>
+   </figure>
+
+2. IMAGE DÉCORATIVE
+   <img src="decoration.jpg" alt=""
+        width="1200" height="100">
+
+3. VIDÉO
+   <figure>
+       <video controls poster="thumbnail.jpg"
+              width="1280" height="720" preload="metadata">
+           <source src="video.mp4" type="video/mp4">
+           <source src="video.webm" type="video/webm">
+           Votre navigateur ne supporte pas la vidéo.
+           <a href="video.mp4">Télécharger</a>
+       </video>
+       <figcaption>Légende de la vidéo</figcaption>
+   </figure>
+
+RÈGLES D'OR
+   - alt="" → décoratif (lecteur d'écran IGNORE)
+   - alt="description" → informatif (lecteur d'écran LIT)
+   - JAMAIS d'image sans alt (même vide)
+   - TOUJOURS width + height (anti-CLS)
+   - figcaption ≠ alt (les 2 sont nécessaires)
+
+LES 3 TESTS ULTIMES
+   1. Désactive les images → le texte reste compréhensible ?
+   2. Performance → 0 Layout Shift
+   3. NVDA / VoiceOver → chaque image utile est décrite

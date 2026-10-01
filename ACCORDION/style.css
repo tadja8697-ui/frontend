@@ -1,0 +1,208 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-bg-alt: #f9fafb;
+    --color-trigger-bg: #0a0a0a;
+    --color-trigger-text: #ffffff;
+    --color-panel-bg: #ffffff;
+    --color-panel-border: #1a1a1a;
+    --color-focus: #2563eb;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 8px;
+    --radius-lg: 12px;
+
+    --transition: 0.3s ease;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: var(--space-xl) var(--space-md);
+    display: flex;
+    justify-content: center;
+}
+
+.page {
+    width: 100%;
+    max-width: 640px;
+}
+
+/* En-tête */
+.page-header {
+    margin-bottom: var(--space-lg);
+}
+
+.page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.page-header p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+/* ============================================================
+   3. ACCORDION (conteneur)
+   ============================================================ */
+
+.accordion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.accordion-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* ============================================================
+   4. LE DÉCLENCHEUR (la barre noire)
+   ============================================================ */
+
+.accordion-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+
+    width: 100%;
+    padding: 1rem var(--space-lg);
+
+    background-color: var(--color-trigger-bg);
+    color: var(--color-trigger-text);
+
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    transition: background-color var(--transition);
+}
+
+.accordion-trigger:hover {
+    background-color: #262626;
+}
+
+.accordion-trigger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5);
+}
+
+/* La flèche (chevron) */
+.chevron {
+    flex-shrink: 0;
+    transition: transform var(--transition);
+}
+
+/* ⚠️ Rotation de la flèche quand l'item est ouvert */
+.accordion-item.is-open .chevron {
+    transform: rotate(180deg);
+}
+
+/* ============================================================
+   5. LE PANNEAU (la réponse)
+   ============================================================ */
+
+.accordion-panel {
+    background-color: var(--color-panel-bg);
+    border: 2px solid var(--color-panel-border);
+    border-radius: var(--radius);
+
+    /* ⚠️ LE CŒUR DE L'ANIMATION ⚠️ */
+    max-height: 0;
+    padding: 0 var(--space-lg);
+    overflow: hidden;
+
+    opacity: 0;
+    transition:
+        max-height var(--transition),
+        padding var(--transition),
+        opacity var(--transition);
+}
+
+/* État ouvert : le panneau s'expand */
+.accordion-item.is-open .accordion-panel {
+    max-height: 500px;         /* Assez grand pour contenir la réponse */
+    padding: var(--space-lg);
+    opacity: 1;
+}
+
+.accordion-panel p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+/* ============================================================
+   6. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+
+    .accordion-trigger {
+        padding: 0.85rem var(--space-md);
+        font-size: 0.95rem;
+    }
+
+    .accordion-panel p {
+        font-size: 0.9rem;
+    }
+}
+
+/* ============================================================
+   7. BONUS : DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-text-muted: #9ca3af;
+        --color-bg: #121212;
+        --color-bg-alt: #1f1f1f;
+        --color-trigger-bg: #f5f5f5;
+        --color-trigger-text: #0a0a0a;
+        --color-panel-bg: #1f1f1f;
+        --color-panel-border: #f5f5f5;
+    }
+
+    .accordion-trigger:hover {
+        background-color: #d1d5db;
+    }
+}

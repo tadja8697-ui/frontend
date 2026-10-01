@@ -1,0 +1,295 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-bg-page: #f9fafb;
+    --color-bg-empty: #f3f4f6;
+    --color-bg-loading: #e5e7eb;
+    --color-bg-error: #fecaca;
+    --color-border: #1a1a1a;
+    --color-error: #dc2626;
+    --color-btn-bg: #0a0a0a;
+    --color-btn-hover: #262626;
+    --color-focus: #2563eb;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --radius: 12px;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg-page);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: var(--space-xl) var(--space-md);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.page {
+    width: 100%;
+    max-width: 480px;
+}
+
+/* ============================================================
+   2. EN-TÊTE
+   ============================================================ */
+.app-header {
+    margin-bottom: var(--space-lg);
+}
+
+.app-header h1 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.app-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: var(--color-btn-bg);
+    color: white;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+/* ============================================================
+   3. FORMULAIRE
+   ============================================================ */
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: var(--space-sm);
+}
+
+.form-select {
+    width: 100%;
+    padding: 0.75rem var(--space-md);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.form-select:focus-visible {
+    border-color: var(--color-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* ============================================================
+   4. ZONE DE CONTENU
+   ============================================================ */
+.content {
+    min-height: 260px;
+}
+
+/* ---------- EMPTY ---------- */
+.state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl);
+    border-radius: var(--radius);
+    text-align: center;
+    min-height: 200px;
+    gap: var(--space-md);
+}
+
+.state--empty {
+    background-color: var(--color-bg-empty);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+/* ---------- LOADING ---------- */
+.state--loading {
+    background-color: var(--color-bg-loading);
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: var(--color-btn-bg);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- ERROR ---------- */
+.state--error {
+    background-color: var(--color-bg-error);
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+.error-text {
+    color: var(--color-error);
+}
+
+.retry-btn {
+    width: 100%;
+    padding: 0.75rem var(--space-md);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--color-error);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.retry-btn:hover {
+    background-color: #b91c1c;
+}
+
+.retry-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.4);
+}
+
+/* ============================================================
+   5. REPO CARD (SUCCESS STATE)
+   ============================================================ */
+.repo-card {
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.repo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+}
+
+.repo-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.repo-name a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.repo-name a:hover {
+    text-decoration: underline;
+}
+
+.repo-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    transition: background-color 0.2s ease;
+}
+
+.repo-link:hover {
+    background-color: var(--color-bg-page);
+}
+
+.repo-description {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.repo-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    list-style: none;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    padding-top: var(--space-sm);
+    border-top: 1px solid #e5e7eb;
+}
+
+.lang-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #f7df1e;  /* Jaune JS */
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.refresh-btn {
+    padding: 0.75rem var(--space-md);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--color-btn-bg);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.refresh-btn:hover {
+    background-color: var(--color-btn-hover);
+}
+
+.refresh-btn:active {
+    transform: scale(0.98);
+}
+
+.refresh-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+/* ============================================================
+   6. RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+    .page { padding: 0; }
+    .repo-card { padding: var(--space-md); }
+    .repo-meta { gap: var(--space-sm); }
+}

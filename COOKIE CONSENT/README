@@ -1,0 +1,178 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — localStorage : la mémoire du navigateur
+javascript
+localStorage.setItem('cookie-consent', 'accepted');   // Écrire
+const value = localStorage.getItem('cookie-consent');  // Lire → "accepted"
+localStorage.removeItem('cookie-consent');             // Supprimer
+localStorage.clear();                                   // Tout effacer
+💡 Analogie : localStorage, c'est un carnet de notes que le navigateur garde pour chaque site. Tu peux y écrire des paires clé → valeur (toujours des strings).
+
+Caractéristique	Détail
+Durée	Permanente (jusqu'à effacement manuel)
+Portée	Par domaine (monsite.com ne voit pas autre.com)
+Type	Strings uniquement
+Taille	~5-10 MB selon le navigateur
+💡 Pour stocker un objet (plus tard) :
+
+javascript
+localStorage.setItem('user', JSON.stringify({ name: 'Ada', age: 30 }));
+const user = JSON.parse(localStorage.getItem('user'));
+🔹 4.2 — Le try/catch autour de localStorage
+javascript
+try {
+    localStorage.setItem(STORAGE_KEY, STORAGE_VALUE);
+} catch (e) {
+    console.warn('Impossible d\'enregistrer :', e);
+}
+💡 Pourquoi ? En navigation privée stricte (Firefox) ou quand les cookies sont bloqués, localStorage.setItem lance une erreur. Sans try/catch, ton script plante et le bouton ne marche plus.
+
+Règle de pro : toujours protéger les accès au stockage.
+
+🔹 4.3 — Le pattern hidden + classe CSS
+html
+<div id="cookie-banner" hidden>...</div>
+css
+.cookie-banner {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.cookie-banner.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cookie-banner[hidden] {
+    display: none;
+}
+💡 Pourquoi deux mécanismes ?
+
+hidden	.is-visible
+Sans JS → caché	Anime l'apparition
+Sémantique (accessibilité)	Visuel
+Workflow :
+
+La bannière est hidden au chargement → rien ne s'affiche.
+
+Le JS retire hidden → l'élément existe mais est opacity: 0 (invisible).
+
+Le JS ajoute .is-visible → transition vers opacity: 1.
+
+🔹 4.4 — requestAnimationFrame (le piège subtil)
+javascript
+function showBanner() {
+    banner.hidden = false;
+
+    requestAnimationFrame(function () {
+        banner.classList.add('is-visible');
+    });
+}
+💡 Pourquoi ? Si on fait hidden = false puis immédiatement add('is-visible'), le navigateur ne voit pas la transition : il ne peint jamais l'état intermédiaire.
+
+Analogie : imagine que tu veuilles filmer quelqu'un qui part de A et va à B. Si tu lui dis "va en B" avant même d'avoir allumé la caméra, tu ne filmes rien. requestAnimationFrame = "attends la prochaine frame, puis fais l'action". Ça garantit que la transition est visible.
+
+Alternative : utiliser un setTimeout(..., 10) — moins propre mais courant.
+
+🔹 4.5 — Le setTimeout pour cacher
+javascript
+function hideBanner() {
+    banner.classList.remove('is-visible');
+
+    setTimeout(function () {
+        banner.hidden = true;
+    }, 300);
+}
+💡 Pourquoi attendre 300ms ? Parce que la transition CSS dure 300ms. Si on met hidden = true immédiatement, l'animation est coupée net → effet brutal.
+
+Règle : la durée du setTimeout doit correspondre à la durée de la transition CSS.
+
+💡 Astuce pro : pour éviter de synchroniser à la main, on peut écouter l'événement transitionend :
+
+javascript
+banner.addEventListener('transitionend', function () {
+    if (!banner.classList.contains('is-visible')) {
+        banner.hidden = true;
+    }
+});
+🔹 4.6 — Le bouton × vs le bouton "I like Cookies"
+javascript
+acceptBtn.addEventListener('click', function () {
+    saveConsent();   // ← On enregistre
+    hideBanner();
+});
+
+closeBtn.addEventListener('click', function () {
+    hideBanner();    // ← On n'enregistre PAS
+});
+💡 Différence importante :
+
+Accepter → consentement enregistré → ne reviendra pas.
+
+Fermer (×) → pas de consentement → reviendra à la prochaine visite.
+
+C'est conforme aux réglementations (RGPD) : fermer ≠ accepter.
+
+🔹 4.7 — Le préfixe sur les clés
+javascript
+const STORAGE_KEY = 'cookie-consent';
+💡 Pourquoi un nom précis ? Parce que localStorage est partagé entre TOUS les scripts de ton site. Si tu utilises 'consent' comme clé, un autre script pourrait l'écraser.
+
+Bonne pratique : préfixer avec le nom du projet → monsite-cookie-consent, ou en kebab-case ici.
+
+🔹 4.8 — Le aria-modal="false" sur le dialog
+html
+<div role="dialog" aria-modal="false">
+💡 Pourquoi false ? Parce qu'une bannière cookie n'est pas modale — l'utilisateur peut continuer à naviguer. aria-modal="true" serait réservé aux vraies modales qui bloquent l'interaction avec le reste.
+
+⚠️ Piège : beaucoup de tutoriels mettent aria-modal="true" par défaut. C'est faux ici.
+
+Les 4 concepts JS nouveaux de cet exercice :
+
+1. localStorage
+   localStorage.setItem('key', 'value')     ← écrire
+   localStorage.getItem('key')               ← lire
+   localStorage.removeItem('key')            ← supprimer
+   ⚠️ Toujours dans un try/catch
+
+2. Le pattern "hidden + classe"
+   HTML : <div hidden>
+   CSS  : .is-visible { opacity: 1 }
+   JS   : hidden = false → requestAnimationFrame → add('is-visible')
+
+3. requestAnimationFrame
+   Pour laisser le navigateur peindre un état
+   AVANT d'ajouter la classe qui déclenche la transition.
+
+4. Le setTimeout synchronisé
+   setTimeout(() => { hidden = true }, 300)
+   La durée DOIT correspondre à la transition CSS.
+
+Règle d'or :
+   Un bouton "Fermer" ne vaut PAS un bouton "Accepter".
+   (RGPD + UX)
+
+💡 Astuce de prof
+C'est l'exercice le plus "professionnel" qu'on ait fait. Pourquoi ?
+
+Parce que tu ne codes pas juste un composant — tu résous un problème réel :
+
+Comment mémoriser un choix utilisateur ?
+
+Comment éviter d'importuner avec un popup ?
+
+Comment respecter le RGPD ?
+
+Les 3 règles à graver :
+1. Ne jamais demander deux fois la même chose.
+
+2. Fermer ≠ Accepter. (juridiquement ET pour l'UX)
+
+3. Toujours prévoir le mode "sans JS" → la bannière est hidden au départ.
+
+Pour aller plus loin :
+MDN localStorage : developer.mozilla.org/fr/docs/Web/API/Window/localStorage
+
+RGPD + cookies : cnil.fr/fr/cookies-et-autres-traceurs
+
+Pattern ARIA dialog : w3.org/WAI/ARIA/apg/patterns/dialog-modal

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Comparaison des plans tarifaires Acme : Free, Pro et Business.">
+    <meta name="author" content="Your Name">
+
+    <title>Acme Plans - Pricing Comparison</title>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header>
+        <h1>Acme Plans</h1>
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ========== MAIN ========== -->
+    <main>
+
+        <h2>Plan comparison</h2>
+
+        <!-- ========== TABLEAU ========== -->
+        <table>
+            <!-- Le caption DOIT être le 1er enfant de <table> -->
+            <caption>
+                Comparison of Acme subscription plans: Free, Pro and Business.
+            </caption>
+
+            <!-- ========== EN-TÊTES ========== -->
+            <thead>
+                <tr>
+                    <th scope="col">Plan</th>
+                    <th scope="col">Storage</th>
+                    <th scope="col">Projects</th>
+                    <th scope="col">Support</th>
+                </tr>
+            </thead>
+
+            <!-- ========== CORPS ========== -->
+            <tbody>
+
+                <tr>
+                    <!-- scope="row" → cette cellule est l'en-tête de LA LIGNE -->
+                    <th scope="row">Free</th>
+                    <td>5 GB</td>
+                    <td>3</td>
+                    <td>Email</td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Pro</th>
+                    <td>100 GB</td>
+                    <td>25</td>
+                    <td>Priority Email</td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Business</th>
+                    <td>1 TB</td>
+                    <td>Unlimited</td>
+                    <td>24/7 Phone</td>
+                </tr>
+
+                <!-- ========== LIGNE FUSIONNÉE (colspan) ========== -->
+                <!--
+                    Cette ligne couvre les 4 colonnes du tableau.
+                    On annonce colspan="4" → on ne met QU'UNE seule <td>.
+                -->
+                <tr>
+                    <td colspan="4">
+                        All plans include SSL and daily backups
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer>
+        <p>© 2025 Acme Co.</p>
+    </footer>
+
+</body>
+</html>

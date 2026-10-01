@@ -1,0 +1,205 @@
+Le pattern "quiz app" en 6 règles :
+
+1. STATE MACHINE
+   const STATUS = { START, PLAYING, FINISHED };
+   const [status, setStatus] = useState(STATUS.START);
+   → Rendus conditionnels selon status.
+
+2. STATE COMPLEXE
+   - status       : écran actuel
+   - currentIndex : question actuelle
+   - score        : bonnes réponses
+   - answers      : historique
+   - selectedIndex: réponse à la question courante
+
+3. UPDATER FUNCTIONS
+   setScore((s) => s + 1)          ← Toujours
+   setAnswers((prev) => [...prev, x])
+
+4. CUSTOM HOOK (timer)
+   useCountdown(initial, isRunning, onExpire, resetKey)
+   → useState + useEffect + setInterval + cleanup
+
+5. CLEANUP OBLIGATOIRE
+   return () => clearInterval(id);
+   → Sinon fuite mémoire
+
+6. ROLE="STATUS" POUR LE FEEDBACK
+   <div role="status">✓ Correct!</div>
+   → Annoncé par les lecteurs d'écran
+
+RÈGLE D'OR :
+   "Un seul `status` contrôle tout l'affichage.
+    Jamais 3 booléens."
+
+
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — Le state machine (concept clé)
+jsx
+const STATUS = {
+    START: 'start',
+    PLAYING: 'playing',
+    FINISHED: 'finished',
+};
+
+const [status, setStatus] = useState(STATUS.START);
+
+// Rendu conditionnel
+{status === STATUS.START    && <StartScreen />}
+{status === STATUS.PLAYING  && <QuestionCard />}
+{status === STATUS.FINISHED && <ResultsScreen />}
+💡 C'est LE pattern d'architecture d'app moderne :
+
+1 variable status contrôle tout l'affichage.
+
+Impossible d'avoir 2 écrans en même temps.
+
+Impossible d'avoir 0 écran.
+
+Analogie : imagine un feu tricolore. Les 3 états sont exclusifs. Tu ne peux pas être vert ET rouge.
+
+⚠️ Alternative naïve (à éviter) :
+
+jsx
+const [showStart, setShowStart] = useState(true);
+const [showQuestion, setShowQuestion] = useState(false);
+const [showResults, setShowResults] = useState(false);
+// ❌ 3 booléens → 8 combinaisons possibles, dont 6 absurdes
+🔹 4.2 — Les updater functions (piège React)
+jsx
+// ❌ MAUVAIS : dépend de score "capturé" au moment du rendu
+setScore(score + 1);
+
+// ✅ BON : utilise la valeur la PLUS RÉCENTE
+setScore((s) => s + 1);
+💡 Pourquoi ? Si tu appelles setScore plusieurs fois d'affilée, la version courte utiliserait l'ancienne valeur à chaque fois.
+
+jsx
+setScore(score + 1);   // 0 + 1 = 1
+setScore(score + 1);   // 0 + 1 = 1  ❌ ÉCRASE
+// Résultat final : 1
+
+setScore((s) => s + 1);   // 0 + 1 = 1
+setScore((s) => s + 1);   // 1 + 1 = 2  ✅
+// Résultat final : 2
+Règle : toujours utiliser l'updater function quand la nouvelle valeur dépend de l'ancienne.
+
+🔹 4.3 — Le custom hook useCountdown
+jsx
+const timeLeft = useCountdown(
+    quizInfo.timePerQuestion,           // Durée initiale
+    status === STATUS.PLAYING && selectedIndex === null,  // Actif ?
+    handleTimeout,                       // Callback
+    currentIndex,                        // Clé de reset
+);
+💡 Pourquoi un custom hook ?
+
+Isole la complexité (setInterval, cleanup...).
+
+Réutilisable dans d'autres projets.
+
+Testable séparément.
+
+Signature : useCountdown(initialSeconds, isRunning, onExpire, resetKey).
+
+🔹 4.4 — Le useEffect qui reset le timer
+jsx
+useEffect(() => {
+    setSecondsLeft(initialSeconds);
+}, [initialSeconds, resetKey]);
+💡 Quand resetKey change (nouvelle question), le timer se réinitialise à 60s.
+Sans ça : le timer continuerait avec la valeur de la question précédente.
+
+🔹 4.5 — Le cleanup de setInterval
+jsx
+useEffect(() => {
+    const id = setInterval(() => {
+        setSecondsLeft((s) => s - 1);
+    }, 1000);
+
+    return () => clearInterval(id);   // ← CRUCIAL
+}, [dependencies]);
+⚠️ Sans le cleanup :
+
+setInterval continue de tourner en arrière-plan → fuite mémoire.
+
+Si le composant se démonte, tu appelles setState sur un composant mort → warning React.
+
+Règle d'or :
+
+Tout ce que tu démarres dans un useEffect, tu dois le nettoyer.
+
+🔹 4.6 — Le role="status" pour le feedback
+jsx
+<div className={`feedback ${isCorrect ? 'feedback--correct' : 'feedback--wrong'}`} role="status">
+    {isCorrect ? '✓ Correct!' : '✗ Wrong...'}
+</div>
+💡 role="status" → le lecteur d'écran annonce le feedback automatiquement sans interrompre l'utilisateur (équivalent aria-live="polite").
+
+🔹 4.7 — Le String.fromCharCode(65 + index)
+jsx
+String.fromCharCode(65 + index)   // index 0 → 'A', 1 → 'B', 2 → 'C', 3 → 'D'
+💡 Astuce : en ASCII, A = 65, B = 66... Donc 65 + i donne la lettre correspondante. Bien plus élégant que ['A','B','C','D'][i].
+
+🔹 4.8 — Les 3 états des boutons d'option
+css
+.option-btn.is-correct { ... }   /* Vert : bonne réponse */
+.option-btn.is-wrong   { ... }   /* Rouge : mauvaise réponse */
+.option-btn.is-dimmed  { opacity: 0.5 }   /* Autres : estompées */
+💡 Pattern UX pro :
+
+✅ Correct → vert, même si l'utilisateur ne l'a pas choisi (feedback utile).
+
+❌ Choisi et faux → rouge.
+
+😶 Non choisi et faux → estompé.
+
+Pourquoi estomper les autres ? Pour que l'œil se concentre sur les 2 essentielles : le choix + la bonne réponse.
+
+🔹 4.9 — Le timeout (bonus)
+jsx
+const handleTimeout = useCallback(() => {
+    if (selectedIndex === null) {
+        answerQuestion(-1, true);   // -1 = pas de réponse
+    }
+}, [selectedIndex]);
+💡 -1 est une valeur sentinelle pour dire "pas de réponse". Quand le timer atteint 0 :
+
+On enregistre une réponse avec selectedText: 'No answer (timeout)'.
+
+Le score n'est pas incrémenté (comme une mauvaise réponse).
+
+Note : l'énoncé dit "score should be decremented by 1", mais décrémenter en dessous de 0 n'a pas de sens. On considère donc que ne pas répondre = ne pas gagner le point. Si tu veux, tu peux implémenter la décrémentation stricte.
+
+🔹 4.10 — Le useCallback pour handleTimeout
+jsx
+const handleTimeout = useCallback(() => {
+    ...
+}, [selectedIndex]);
+💡 useCallback mémorise la fonction entre les rendus. Sans ça, la fonction serait recréée à chaque rendu, ce qui redéclencherait le useEffect du hook → boucle infinie. ⚠️
+
+Règle : quand tu passes une fonction en dépendance d'un useEffect (comme dans le hook countdown), utilise useCallback.
+
+🎯 ÉTAPE 7 : Envoi sur GitHub
+bash
+cd ~/Musique/roadmap/frontend
+git add 20-quiz-app/
+git commit -m "Ajout exercice 20 : Quiz App (React + state machine + custom hook + timer)"
+git push origin main
+Déploiement Netlify
+netlify.com → Add new site → Import from Git.
+
+Choisis ton dépôt frontend-exercises.
+
+Base directory : 20-quiz-app
+
+Build command : npm run build
+
+Publish directory : dist
+
+Deploy → tu obtiens une URL.
+
+URL finale (exemple) :
+
+text
+https://quiz-app-ada.netlify.app

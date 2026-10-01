@@ -1,0 +1,236 @@
+🎯 ÉTAPE 5 : Explication détaillée
+🔹 5.1 — Le pattern "override de tokens"
+css
+/* Thème par défaut */
+:root {
+    --color-bg: #ffffff;
+    --color-text: #1a1a1a;
+}
+
+/* Override partiel : on ne redéfinit QUE ce qui change */
+:root:has(#theme-dark:checked) {
+    --color-bg: #0f172a;
+    --color-text: #f1f5f9;
+}
+💡 La beauté du système :
+
+Le thème par défaut définit TOUS les tokens.
+
+Les variantes n'overrident que ce qui change.
+
+Un token non overridé garde la valeur par défaut.
+
+Attention : l'énoncé précise "the same set of token names must be defined in every theme". Pour être strictement conforme, on pourrait définir tous les tokens dans chaque thème :
+
+css
+:root:has(#theme-dark:checked) {
+    /* On redéfinit TOUT, même si certains sont identiques */
+    --color-bg: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #f1f5f9;
+    --color-text-muted: #94a3b8;
+    --color-accent: #3b82f6;
+    --color-accent-hover: #60a5fa;
+    --color-on-accent: #ffffff;
+    --color-border: #334155;
+}
+Avantage : si un token est oublié dans un thème, il ne "fuit" pas du thème précédent. Plus robuste en équipe.
+
+💡 En pratique : les deux approches sont valables. Pour ce projet, on redéfinit tout dans chaque thème → conforme à l'énoncé.
+
+🔹 5.2 — :has() vs sibling selector
+Notre approche :
+
+css
+:root:has(#theme-dark:checked) { ... }
+Traduction : "Si la racine <html> contient un élément #theme-dark coché → override les tokens."
+
+Comment ça marche :
+
+Le <html> (représenté par :root) est l'ancêtre de tout.
+
+:has(#theme-dark:checked) vérifie qu'un descendant correspond.
+
+Le :root entier reçoit les nouveaux tokens.
+
+Tout élément qui utilise var(--color-bg) change de couleur.
+
+Alternative avec sibling :
+
+css
+#theme-dark:checked ~ .page .card { ... }
+💡 Avantage de :root:has() : on override au niveau racine → TOUT change (body, page, carte, bouton...). C'est plus global et cohérent.
+
+🔹 5.3 — Les labels actifs : le sélecteur ~ et :nth-child()
+css
+#theme-light:checked ~ .theme-options .theme-option:nth-child(1),
+#theme-dark:checked  ~ .theme-options .theme-option:nth-child(2),
+#theme-custom:checked ~ .theme-options .theme-option:nth-child(3) {
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
+}
+Décomposons la 1ère ligne :
+
+#theme-light:checked → "le radio Light est coché".
+
+~ .theme-options → "trouve le frère suivant .theme-options".
+
+.theme-option:nth-child(1) → "le 1er label à l'intérieur".
+
+Résultat : quand Light est coché, le 1er label est stylé en "actif".
+
+💡 ~ (general sibling combinator) : "sélectionne tous les frères suivants". On l'utilise car les radios et les labels sont frères dans le DOM (même parent).
+
+⚠️ Pourquoi pas + (adjacent) ? Parce qu'il n'y a pas qu'un seul frère : entre les radios et .theme-options, il y a 3 radios. + ne prendrait que le premier frère immédiat. ~ prend tous les suivants.
+
+🔹 5.4 — Radios cachés mais accessibles
+css
+.theme-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+💡 Pourquoi ce pattern ?
+
+opacity: 0 : invisible.
+
+position: absolute : sort du flux (ne pousse pas).
+
+pointer-events: none : le clic passe à travers (vers le label).
+
+MAIS le radio est focusable au clavier → Tab le sélectionne.
+
+Résultat :
+
+Souris → on clique sur le label → coche le radio.
+
+Clavier → Tab passe au radio suivant → :focus-visible s'applique.
+
+⚠️ Ne jamais utiliser display: none ou visibility: hidden → ils rendent le radio non focusable → accessibilité cassée.
+
+🔹 5.5 — Le :focus-visible sur les labels
+css
+#theme-light:focus-visible ~ .theme-options .theme-option:nth-child(1) {
+    box-shadow: 0 0 0 3px var(--color-accent);
+}
+💡 Le problème : le radio est caché (opacity: 0). On ne voit pas le focus.
+
+La solution : quand un radio est focus, on affiche un contour sur le label correspondant.
+
+Pattern : input:focus-visible ~ .container .target
+
+🔹 5.6 — La transition sur les tokens
+css
+.card {
+    transition: background-color var(--transition), border-color var(--transition);
+}
+💡 Résultat : quand on change de thème, toutes les couleurs se transforment en douceur (0.3s). Effet très agréable.
+
+⚠️ Ne PAS mettre transition: all : ça anime AUSSI des propriétés qu'on ne veut pas (largeur, position...). Toujours préciser.
+
+🔹 5.7 — Le checked sur Light par défaut
+html
+<input type="radio" name="theme" id="theme-light" checked>
+💡 checked : le radio est coché au chargement. Comme il n'y a pas de règle CSS pour #theme-light:checked, les tokens par défaut (:root) s'appliquent.
+
+Résultat : au chargement, on est en thème Light sans avoir besoin de JS. ✅
+
+🔹 5.8 — Le sr-only pour le legend
+css
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+💡 Utilité : le <legend> "Choose a theme" est lu par les lecteurs d'écran mais invisible visuellement. On garde la sémantique sans polluer le design.
+
+🔹 5.9 — prefers-reduced-motion
+css
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}
+💡 Accessibilité : les utilisateurs sensibles au mouvement désactivent les animations dans leur OS. On respecte ce choix.
+
+C'est une exigence WCAG 2.1 (AA). ✅
+
+🔹 5.10 — L'ordre des règles CSS
+css
+1. :root { ... }              /* Light */
+2. :root:has(#theme-dark) { } /* Dark */
+3. :root:has(#theme-custom) { } /* Custom */
+⚠️ L'ordre est CRUCIAL. Les règles plus bas écrasent celles plus haut à spécificité égale. Si tu mets Dark avant Light, Light gagnerait toujours. Toujours tester l'ordre.
+
+Le pattern "design tokens + thèmes" :
+
+1. TOKENS PAR DÉFAUT (thème de base)
+   :root {
+       --color-bg: #fff;
+       --color-surface: #fff;
+       --color-text: #1a1a1a;
+       --color-accent: #2563eb;
+       --color-on-accent: #fff;
+       --color-border: #e5e7eb;
+   }
+
+2. THÈMES (override PARTIEL ou TOTAL)
+   :root:has(#theme-dark:checked) {
+       --color-bg: #0f172a;
+       --color-surface: #1e293b;
+       --color-text: #f1f5f9;
+       --color-accent: #3b82f6;
+       --color-on-accent: #fff;
+       --color-border: #334155;
+   }
+
+3. HTML (même markup pour tous les thèmes)
+   <input type="radio" name="theme" id="theme-dark">
+   <label for="theme-dark">Dark</label>
+   <article class="card">...</article>
+
+4. UTILISATION
+   .card { background: var(--color-surface); color: var(--color-text); }
+
+RÈGLES D'OR :
+   - MÊME nom de tokens dans TOUS les thèmes
+   - JAMAIS de couleur hardcodée hors des tokens
+   - Radios accessibles (pas display: none)
+   - :has() sur :root → override global
+   - transition sur les propriétés SPÉCIFIQUES (pas all)
+
+💡 Astuce de prof
+Les design tokens, c'est LA compétence CSS la plus demandée en entreprise. Pourquoi ?
+
+Cohérence : tous les boutons ont la même couleur.
+
+Maintenabilité : tu changes un token, tout se met à jour.
+
+Thématisation : dark mode, mode contraste élevé, marque blanche...
+
+Écosystème : Tailwind, Material UI, Chakra... tout est basé sur des tokens.
+
+Les 3 règles à graver :
+1. AUCUNE couleur hardcodée hors des tokens. color: #2563eb est un bug.
+
+2. TOUS les tokens définis dans CHAQUE thème. Sinon fuite.
+
+3. :has() sur :root pour changer de thème globalement. Zéro JS.
+
+Le test mental ultime :
+Cherche dans ton CSS : #, rgb(, hsl(.
+
+Si tu en trouves en dehors de :root → c'est du hardcodage → à sortir dans un token.
+
+Si tu n'en trouves que dans :root → bravo, tu penses en tokens. ✅
+
+Pour aller plus loin :
+Design Tokens W3C : design-tokens.github.io/community-group/format
+
+MDN :has() : developer.mozilla.org/fr/docs/Web/CSS/:has
+
+MDN Custom Properties : developer.mozilla.org/fr/docs/Web/CSS/Using_CSS_custom_properties
+
+Open Props (lib de tokens) : open-props.style
+

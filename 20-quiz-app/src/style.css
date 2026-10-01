@@ -1,0 +1,432 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-bg-page: #f3f4f6;
+    --color-bg-card: #ffffff;
+    --color-bg-alt: #f9fafb;
+    --color-border: #e5e7eb;
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-correct: #16a34a;
+    --color-correct-bg: #dcfce7;
+    --color-wrong: #dc2626;
+    --color-wrong-bg: #fee2e2;
+    --color-urgent: #dc2626;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 8px;
+    --radius-lg: 16px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg-page);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: var(--space-lg) var(--space-md);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.page {
+    width: 100%;
+    max-width: 640px;
+}
+
+/* Bouton principal (réutilisé partout) */
+.primary-btn {
+    width: 100%;
+    padding: 0.85rem var(--space-md);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: var(--space-md);
+}
+
+.primary-btn:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.primary-btn:active {
+    transform: scale(0.98);
+}
+
+.primary-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+/* ============================================================
+   3. START SCREEN
+   ============================================================ */
+
+.start-screen {
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.start-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+}
+
+.start-header p {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+}
+
+.start-details {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background-color: var(--color-bg-alt);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+}
+
+.start-details li::before {
+    content: '•';
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-right: var(--space-sm);
+}
+
+/* ============================================================
+   4. QUESTION CARD
+   ============================================================ */
+
+.question-card {
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.question-progress {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.question-meta {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.question-score {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.question-timer {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.question-timer.is-urgent {
+    color: var(--color-urgent);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.5; }
+}
+
+.question-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: var(--space-lg);
+}
+
+/* ============================================================
+   5. OPTIONS
+   ============================================================ */
+
+.options-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.option-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+
+    width: 100%;
+    padding: var(--space-md);
+    text-align: left;
+
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text);
+    cursor: pointer;
+
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.option-btn:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg-alt);
+}
+
+.option-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+.option-btn:disabled {
+    cursor: not-allowed;
+}
+
+/* Lettre (A, B, C, D) */
+.option-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    background-color: var(--color-bg-alt);
+    border-radius: 50%;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+}
+
+.option-text {
+    flex: 1;
+}
+
+/* ---------- États après réponse ---------- */
+
+.option-btn.is-correct {
+    background-color: var(--color-correct-bg);
+    border-color: var(--color-correct);
+}
+
+.option-btn.is-correct .option-letter {
+    background-color: var(--color-correct);
+    color: white;
+}
+
+.option-btn.is-wrong {
+    background-color: var(--color-wrong-bg);
+    border-color: var(--color-wrong);
+}
+
+.option-btn.is-wrong .option-letter {
+    background-color: var(--color-wrong);
+    color: white;
+}
+
+.option-btn.is-dimmed {
+    opacity: 0.5;
+}
+
+/* ============================================================
+   6. FEEDBACK
+   ============================================================ */
+
+.feedback {
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+}
+
+.feedback--correct {
+    background-color: var(--color-correct-bg);
+    color: var(--color-correct);
+    font-weight: 600;
+}
+
+.feedback--wrong {
+    background-color: var(--color-wrong-bg);
+    color: var(--color-wrong);
+}
+
+.feedback strong {
+    font-weight: 700;
+}
+
+/* ============================================================
+   7. RESULTS SCREEN
+   ============================================================ */
+
+.results-screen {
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.results-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.results-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+}
+
+.results-message {
+    color: var(--color-text-muted);
+}
+
+.results-score {
+    text-align: center;
+    padding: var(--space-lg);
+    background-color: var(--color-bg-alt);
+    border-radius: var(--radius);
+    margin-bottom: var(--space-xl);
+}
+
+.score-big {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.score-percentage {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+}
+
+.results-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+}
+
+.results-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.results-item {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius);
+    border-left: 4px solid;
+}
+
+.results-item.is-correct {
+    background-color: var(--color-correct-bg);
+    border-left-color: var(--color-correct);
+}
+
+.results-item.is-wrong {
+    background-color: var(--color-wrong-bg);
+    border-left-color: var(--color-wrong);
+}
+
+.results-icon {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.results-item.is-correct .results-icon { color: var(--color-correct); }
+.results-item.is-wrong   .results-icon { color: var(--color-wrong); }
+
+.results-content {
+    flex: 1;
+}
+
+.results-question {
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+}
+
+.results-details {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+/* ============================================================
+   8. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .question-card,
+    .start-screen,
+    .results-screen {
+        padding: var(--space-lg);
+    }
+
+    .question-text {
+        font-size: 1.1rem;
+    }
+
+    .option-btn {
+        font-size: 0.95rem;
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .score-big {
+        font-size: 2.5rem;
+    }
+}

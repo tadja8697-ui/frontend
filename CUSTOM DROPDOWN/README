@@ -1,0 +1,278 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — Le positionnement absolu du menu
+css
+.dropdown {
+    position: relative;    /* Référentiel */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);   /* Juste sous le trigger + 8px */
+    left: 0;
+    right: 0;                 /* Prend toute la largeur du trigger */
+    z-index: 100;
+}
+💡 Pattern déjà vu (exercices Datepicker, Tooltip) :
+
+position: relative sur le parent → point d'ancrage.
+
+position: absolute sur l'enfant → sort du flux.
+
+top: calc(100% + 8px) → 8px sous le trigger.
+
+left: 0; right: 0 → même largeur que le trigger.
+
+🔹 4.2 — Cacher le menu avec visibility + opacity
+css
+.dropdown-menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.dropdown.is-open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+Pourquoi 3 propriétés ?
+
+Propriété	Rôle
+opacity: 0	Invisible (animable)
+visibility: hidden	Retiré de l'accessibilité (lecteurs d'écran l'ignorent)
+transform: translateY(-8px)	Léger décalage initial pour l'effet slide
+💡 visibility: hidden est CRUCIAL : sans ça, les items restent focusables au clavier même quand le menu est fermé. L'utilisateur tabulerait dans un menu invisible. Bugué.
+
+Différence avec display: none :
+
+display: none → pas d'animation possible.
+
+visibility: hidden → animable (avec transition: visibility 0.2s).
+
+🔹 4.3 — La rotation du chevron
+css
+.dropdown-chevron {
+    transition: transform 0.2s ease;
+}
+
+.dropdown.is-open .dropdown-chevron {
+    transform: rotate(180deg);
+}
+💡 Même pattern que l'accordéon. Le chevron pointe vers le bas (fermé) et vers le haut (ouvert).
+
+🔹 4.4 — Le clic extérieur (le point subtil)
+javascript
+document.addEventListener('click', function (event) {
+    if (!dropdown.contains(event.target)) {
+        if (isOpen) closeMenu();
+    }
+});
+Décomposons :
+
+On écoute TOUS les clics sur la page.
+
+dropdown.contains(event.target) → le clic est-il dans le dropdown ?
+
+Si non → fermer le menu.
+
+💡 .contains() est LA méthode pour tester l'appartenance.
+
+⚠️ Piège : sans event.stopPropagation() sur le trigger et les items, leur clic remonterait au document et déclencherait la fermeture immédiate. C'est pour ça qu'on stopPropagation().
+
+Alternative : au lieu de stopPropagation(), on pourrait vérifier dans le listener document si event.target est dans le dropdown OU sur le trigger. Mais stopPropagation est plus simple ici.
+
+🔹 4.5 — La navigation circulaire avec modulo
+javascript
+focusedIndex = (focusedIndex + direction + items.length) % items.length;
+Décomposons pour direction = +1 (flèche bas) :
+
+Index actuel : 4 (dernier, sur 5 items).
+
+4 + 1 = 5.
+
+5 + 5 = 10.
+
+10 % 5 = 0 → revient au premier. ✅
+
+Pour direction = -1 (flèche haut) :
+
+Index actuel : 0 (premier).
+
+0 - 1 = -1.
+
+-1 + 5 = 4.
+
+4 % 5 = 4 → va au dernier. ✅
+
+💡 Le + items.length est crucial pour éviter les modulos négatifs en JavaScript. -1 % 5 = -1 en JS (contrairement à d'autres langages). On ajoute length pour rester positif.
+
+🔹 4.6 — Le data-value sur chaque item
+html
+<li data-value="third">Third Item</li>
+💡 Utilité : quand on sélectionne un item, on peut envoyer data-value au serveur (au lieu du texte visible).
+
+Exemple plus tard :
+
+javascript
+const selectedValue = items[selectedIndex].dataset.value;   // "third"
+Valeur visible : "Third Item" (pour l'humain).
+Valeur envoyée : "third" (pour le serveur, plus propre).
+
+🔹 4.7 — La coche ✓ en CSS pur
+css
+.dropdown-item.is-selected::after {
+    content: '✓';
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-text);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+}
+💡 Pseudo-élément ::after : injecte la coche uniquement sur l'item sélectionné. Zéro HTML en plus.
+
+🔹 4.8 — Les rôles ARIA (rappel)
+html
+<button
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-controls="dropdown-menu"
+>
+
+<ul role="listbox" tabindex="-1">
+    <li role="option" aria-selected="false">First Item</li>
+</ul>
+Attribut	Signification
+aria-haspopup="listbox"	"Ce bouton ouvre une liste de choix"
+aria-expanded	État ouvert/fermé
+aria-controls	Lie le trigger au menu
+role="listbox"	"Ceci est une liste de choix"
+role="option"	"Ceci est un choix dans la liste"
+aria-selected	Quel choix est sélectionné
+💡 Ce qu'un lecteur d'écran annonce :
+
+"Select an Item, bouton, collapsed, ouvre une liste de choix"
+
+Puis au clic :
+
+"Expandu. First Item, option, 1 sur 5."
+
+Sans ARIA : "Select an Item, bouton." Et l'utilisateur ne sait PAS ce qu'il y a dedans. 🚫
+
+🔹 4.9 — L'événement mouseenter sur les items
+javascript
+item.addEventListener('mouseenter', function () {
+    focusedIndex = index;
+    updateFocusedItem();
+});
+💡 Pourquoi ? Quand l'utilisateur survole un item à la souris, on met à jour focusedIndex → l'item a la classe .is-focused → si l'utilisateur appuie sur Entrée, on sait lequel sélectionner. Cohérence souris + clavier.
+
+🔹 4.10 — Le trigger.focus() après sélection
+javascript
+function selectItem(index) {
+    // ...
+    closeMenu();
+    trigger.focus();   // ← Focus revient sur le trigger
+}
+💡 Pourquoi ? Après avoir sélectionné, l'utilisateur au clavier veut continuer à naviguer. Sans trigger.focus(), le focus serait perdu → il devrait re-tabuler depuis le début. Mauvaise UX.
+
+Règle d'or a11y :
+
+Après une action, le focus doit revenir à un endroit logique.
+
+Le pattern "custom dropdown" :
+
+1. STRUCTURE
+   <div class="dropdown">
+     <button aria-haspopup="listbox" aria-expanded="false" aria-controls="menu">
+       Label <svg chevron>
+     </button>
+     <ul role="listbox" id="menu">
+       <li role="option" aria-selected="false">...</li>
+     </ul>
+   </div>
+
+2. CSS
+   .dropdown        { position: relative }
+   .dropdown-menu   { position: absolute; top: calc(100% + 8px);
+                      opacity: 0; visibility: hidden;
+                      transition: opacity .2s, transform .2s, visibility .2s }
+   .dropdown.is-open .dropdown-menu { opacity: 1; visibility: visible }
+   .dropdown.is-open .chevron       { transform: rotate(180deg) }
+   .dropdown-item.is-selected::after { content: '✓' }
+
+3. JS (les 3 variables de state)
+   let isOpen = false;         → menu ouvert/fermé
+   let selectedIndex = -1;     → item sélectionné
+   let focusedIndex = -1;      → item focus clavier
+
+4. LES 5 ÉVÉNEMENTS À GÉRER
+   trigger.click          → toggleMenu()
+   item.click             → selectItem(index)
+   item.mouseenter        → focusedIndex = index
+   document.click         → si !dropdown.contains(target) → closeMenu()
+   trigger/menu.keydown   → ↑ ↓ Entrée Espace Échap Home End
+
+5. NAVIGATION CIRCULAIRE
+   focusedIndex = (focusedIndex + direction + length) % length;
+
+RÈGLES D'OR :
+   - event.stopPropagation() sur trigger et items
+   - visibility: hidden (pas juste opacity: 0)
+   - trigger.focus() après sélection
+   - ARIA : listbox + option + aria-expanded + aria-selected
+
+💡 Astuce de prof
+Le custom dropdown, c'est LE composant qui sépare les juniors des seniors. Pourquoi ?
+
+Un junior le fait avec <select> natif → c'est moche, non stylable.
+
+Un intermédiaire le fait avec <div> cliquable → accessibilité cassée.
+
+Un senior le fait avec role="listbox" + navigation clavier complète → accessible à tous.
+
+Les 3 règles à graver :
+1. Toujours stopPropagation() sur les clics internes. Sinon le clic extérieur ferme immédiatement.
+
+2. visibility: hidden ET opacity: 0. L'un cache visuellement, l'autre rend non-tabulable.
+
+3. Après une sélection, trigger.focus(). Le focus doit revenir à un endroit logique.
+
+Le test mental ultime :
+Débranche ta souris. Tu dois pouvoir utiliser TOUT le dropdown au clavier.
+
+Tab → focus sur le trigger. ✅
+
+Entrée → ouvre. ✅
+
+↓ → navigue. ✅
+
+Entrée → sélectionne. ✅
+
+Échap → ferme. ✅
+
+Si une seule de ces étapes ne marche pas → pas fini.
+
+Le piège du <select> natif
+Beaucoup de devs pensent : "Pourquoi coder un custom ? Le <select> natif fait le job."
+
+Vraie réponse :
+
+✅ <select> natif = accessible, gratuit, robuste.
+
+❌ Pas stylable (impossible de mettre une coche ✓).
+
+❌ Pas de contenu riche (image, badge...).
+
+Règle de pro : utilise le natif par défaut. Fais un custom seulement si le design l'exige. Et si tu fais un custom, fais-le accessible.
+
+Pour aller plus loin :
+W3C ARIA Listbox Pattern : w3.org/WAI/ARIA/apg/patterns/listbox
+
+Headless UI (composant dropdown accessible) : headlessui.com
+
+Radix UI (alternative) : radix-ui.com/primitives/docs/components/select
+
+A11y Project Dropdown : a11yproject.com/patterns
+

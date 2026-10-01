@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Composant Accordion accessible en HTML, CSS et JavaScript.">
+    <meta name="author" content="Your Name">
+
+    <meta property="og:title" content="Accordion">
+    <meta property="og:description" content="Accordion FAQ en JS.">
+    <meta property="og:type" content="website">
+
+    <title>Accordion</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="page">
+
+        <!-- En-tête -->
+        <header class="page-header">
+            <h1>Frequently Asked Questions</h1>
+            <p>Here are some of the frequently asked questions</p>
+        </header>
+
+        <!-- ========== ACCORDION ========== -->
+        <div class="accordion">
+
+            <!-- Item 1 (ouvert par défaut) -->
+            <div class="accordion-item is-open">
+                <button
+                    type="button"
+                    class="accordion-trigger"
+                    aria-expanded="true"
+                    aria-controls="panel-1"
+                >
+                    <span>What is roadmap.sh?</span>
+                    <svg class="chevron" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div
+                    class="accordion-panel"
+                    id="panel-1"
+                    role="region"
+                    aria-labelledby="trigger-1"
+                >
+                    <p>
+                        roadmap.sh is a community effort to create learning paths,
+                        guides, project ideas and other similar content to help
+                        developers grow in their careers.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="accordion-item">
+                <button
+                    type="button"
+                    class="accordion-trigger"
+                    aria-expanded="false"
+                    aria-controls="panel-2"
+                >
+                    <span>What are the plans for roadmap.sh?</span>
+                    <svg class="chevron" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div class="accordion-panel" id="panel-2" role="region">
+                    <p>
+                        Roadmap.sh plans to expand the number of learning paths,
+                        add more interactive exercises and translate content into
+                        more languages.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="accordion-item">
+                <button
+                    type="button"
+                    class="accordion-trigger"
+                    aria-expanded="false"
+                    aria-controls="panel-3"
+                >
+                    <span>How is roadmap.sh built?</span>
+                    <svg class="chevron" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div class="accordion-panel" id="panel-3" role="region">
+                    <p>
+                        roadmap.sh is built with Next.js, Tailwind CSS and
+                        TypeScript. It uses a headless CMS to manage content.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="accordion-item">
+                <button
+                    type="button"
+                    class="accordion-trigger"
+                    aria-expanded="false"
+                    aria-controls="panel-4"
+                >
+                    <span>Can I use roadmap.sh in my team?</span>
+                    <svg class="chevron" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div class="accordion-panel" id="panel-4" role="region">
+                    <p>
+                        Yes! roadmap.sh is free and open source. You can use it
+                        within your team to structure onboarding and learning.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="accordion-item">
+                <button
+                    type="button"
+                    class="accordion-trigger"
+                    aria-expanded="false"
+                    aria-controls="panel-5"
+                >
+                    <span>How can I create custom roadmaps?</span>
+                    <svg class="chevron" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div class="accordion-panel" id="panel-5" role="region">
+                    <p>
+                        You can create custom roadmaps using the roadmap.sh
+                        editor. Save them, share them, or fork existing ones.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="accordion-item">
+                <button
+                    type="button"
+                    class="accordion-trigger"
+                    aria-expanded="false"
+                    aria-controls="panel-6"
+                >
+                    <span>Is roadmap.sh really 7th most starred project on GitHub?</span>
+                    <svg class="chevron" xmlns="http://www.w3.org/2000/svg"
+                         width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+
+                <div class="accordion-panel" id="panel-6" role="region">
+                    <p>
+                        Yes, roadmap.sh has ranked among the top 10 most starred
+                        projects on GitHub, with hundreds of thousands of stars.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

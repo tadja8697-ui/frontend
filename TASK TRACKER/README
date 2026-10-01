@@ -1,0 +1,223 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — Le pattern "State + Render"
+text
+        ┌──────────────────────────────────────┐
+        │                                      │
+        │        tasks = [ {...}, {...} ]      │  ← LE STATE (source de vérité)
+        │                                      │
+        └──────────────────┬───────────────────┘
+                           │
+                    (à chaque modif)
+                           │
+                           ▼
+        ┌──────────────────────────────────────┐
+        │            renderTasks()             │
+        │  1. list.innerHTML = ''              │  ← Vide le DOM
+        │  2. Trier les tâches                 │
+        │  3. Re-créer chaque <li>             │  ← Reconstruit
+        └──────────────────┬───────────────────┘
+                           │
+                           ▼
+        ┌──────────────────────────────────────┐
+        │            DOM (visible)             │
+        │   ☐  Tâche 1                     🗑    │
+        │   ☑  Tâche 2 (barrée)            🗑    │
+        └──────────────────────────────────────┘
+💡 Règle d'or :
+
+Le DOM n'est JAMAIS la source de vérité. C'est tasks qui l'est.
+Le DOM n'est qu'un REFLET de tasks.
+
+Analogie : imagine un tableau blanc (tasks) et un écran qui l'affiche (DOM). Quand tu modifies le tableau, tu redessines l'écran. Jamais l'inverse.
+
+Conséquence pratique : pour changer une tâche, on modifie tasks puis on appelle renderTasks(). On ne touche JAMAIS directement au DOM d'une tâche.
+
+🔹 4.2 — Le tri des tâches : sort
+javascript
+const sortedTasks = [...tasks].sort((a, b) => a.completed - b.completed);
+Décomposons :
+
+[...tasks] : copie du tableau (spread operator). Sans ça, sort() modifierait tasks en place → mauvais.
+
+sort(callback) : trie selon la fonction passée.
+
+a.completed - b.completed : convertit les booléens en nombres (0 ou 1).
+
+Résultat :
+
+false (0) - false (0) = 0 → ordre inchangé.
+
+false (0) - true (1) = -1 → a avant b.
+
+true (1) - false (0) = 1 → a après b.
+
+Ce qu'on obtient : toutes les non-complétées avant les complétées, en préservant l'ordre initial dans chaque groupe (tri stable).
+
+🔹 4.3 — La délégation d'événements
+javascript
+list.addEventListener('click', function (event) {
+    const li = event.target.closest('.task-item');
+    if (!li) return;
+    const id = Number(li.dataset.id);
+
+    if (event.target.matches('.task-checkbox')) { ... }
+    if (event.target.closest('.task-delete'))    { ... }
+});
+Le problème résolu : si on attachait un listener sur chaque checkbox et chaque bouton, il faudrait le refaire à chaque render (car le DOM est recréé). C'est lent et source de bugs.
+
+La solution : on attache UN SEUL listener sur la <ul> (qui ne change jamais). Quand un clic remonte depuis un enfant, il est attrapé ici.
+
+Décomposons :
+
+event.target : l'élément réellement cliqué.
+
+event.target.closest('.task-item') : remonte au <li> parent le plus proche.
+
+li.dataset.id : récupère l'id stocké dans data-id.
+
+event.target.matches('.task-checkbox') : est-ce que c'est la checkbox ?
+
+event.target.closest('.task-delete') : est-ce que c'est le bouton (ou son SVG enfant) ?
+
+💡 closest() est crucial pour le bouton suppr : le clic peut tomber sur le <svg> ou un <path>, pas directement sur le <button>. closest('.task-delete') remonte jusqu'au bouton.
+
+🔹 4.4 — Le data-id pour identifier la tâche
+javascript
+li.dataset.id = task.id;
+En HTML, ça devient :
+
+html
+<li class="task-item" data-id="1727456789012">...</li>
+Pourquoi ? Quand on clique, on lit li.dataset.id → on sait quelle tâche modifier. Ensuite, tasks.find(t => t.id === id) récupère l'objet.
+
+💡 Alternative avec l'index : moins robuste, car si on supprime une tâche au milieu, les index changent. L'id unique ne change jamais.
+
+🔹 4.5 — Le <form> pour gérer la touche Entrée
+html
+<form id="task-form">
+    <input type="text">
+    <button type="submit">↵</button>
+</form>
+javascript
+form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    addTask(input.value);
+});
+💡 Pourquoi un <form> ?
+
+Le navigateur déclenche submit automatiquement quand on appuie sur Entrée dans un input.
+
+Zéro JS à écrire pour gérer la touche Entrée.
+
+Le bouton type="submit" déclenche aussi submit.
+
+Alternative (moins bien) : écouter keydown et vérifier event.key === 'Enter'. Plus de code, plus fragile.
+
+🔹 4.6 — Le tri stable de Array.sort
+Depuis ES2019, Array.sort est stable : les éléments égaux gardent leur ordre relatif.
+
+💡 Pourquoi c'est important ?
+
+Tâche A (non complétée, ajoutée en 1er).
+
+Tâche B (non complétée, ajoutée en 2ème).
+
+Après tri, A reste avant B. ✅
+
+Sans stabilité, l'ordre serait imprévisible. Avec, il est cohérent.
+
+🔹 4.7 — L'accessibilité de la checkbox customisée
+html
+<input type="checkbox" class="task-checkbox">
+<span class="task-checkbox-visual" aria-hidden="true"></span>
+css
+.task-checkbox {
+    position: absolute;
+    opacity: 0;    /* Invisible mais focusable */
+    z-index: 1;
+}
+💡 Le pattern "visually hidden input" :
+
+La vraie checkbox est là (dans le DOM) → focusable au clavier, cliquable, accessible.
+
+Elle est transparente mais superposée à la fausse → le clic passe à travers.
+
+La fausse (<span>) est purement décorative → aria-hidden="true".
+
+Avantage : on garde toutes les fonctionnalités natives (Tab, Espace pour cocher) tout en ayant un design custom.
+
+Alternative : appearance: none en CSS sur la vraie checkbox. Plus simple mais moins compatible.
+
+🔹 4.8 — L'état vide avec :empty::after
+css
+.task-list:empty::after {
+    content: 'No tasks yet. Add one above!';
+    ...
+}
+💡 :empty : sélectionne un élément sans enfants. Quand la liste est vide (<ul></ul>), on affiche un message automatiquement. Zéro JS.
+
+⚠️ Piège : :empty ne fonctionne que si l'élément n'a VRAIMENT aucun enfant, même pas un espace blanc. Comme on fait list.innerHTML = '', c'est bon.
+
+🔹 4.9 — textContent vs innerHTML (SÉCURITÉ)
+javascript
+description.textContent = task.description;   // ✅ SÛR
+// description.innerHTML = task.description;  // ❌ DANGEREUX
+💡 textContent traite la chaîne comme du texte pur. Les balises HTML sont affichées telles quelles.
+
+innerHTML interprète la chaîne comme du HTML. Si l'utilisateur saisit <script>alert('hack')</script>, ça s'exécute. Faille XSS !
+
+Règle absolue :
+
+Tout contenu saisi par l'utilisateur → textContent.
+innerHTML uniquement pour du HTML statique de confiance (ex: SVG).
+
+🔹 4.10 — Le focus revient à l'input
+javascript
+form.addEventListener('submit', function (event) {
+    // ...
+    input.value = '';
+    input.focus();   // ← L'utilisateur peut enchaîner
+});
+💡 UX pro : après avoir ajouté une tâche, le focus revient à l'input. L'utilisateur peut taper la suivante sans cliquer.
+
+Sans ça : après Entrée, le focus est perdu → l'utilisateur doit recliquer. Mauvaise UX.
+
+Le pattern "State + Render" (fondamental) :
+
+1. STATE (source de vérité)
+   let tasks = [
+     { id: 1, description: "...", completed: false },
+     ...
+   ];
+
+2. ACTIONS (modifient le state)
+   addTask(desc)     → tasks.push({...})
+   toggleTask(id)    → task.completed = !task.completed
+   deleteTask(id)    → tasks = tasks.filter(t => t.id !== id)
+
+3. RENDER (reflète le state dans le DOM)
+   function renderTasks() {
+       list.innerHTML = '';                 // 1. Vide
+       const sorted = [...tasks].sort(...); // 2. Trie (copie !)
+       sorted.forEach(task => {             // 3. Re-crée
+           list.appendChild(createTaskElement(task));
+       });
+   }
+
+4. APPELER renderTasks() APRÈS CHAQUE ACTION
+
+5. DÉLÉGATION D'ÉVÉNEMENTS
+   list.addEventListener('click', (event) => {
+       const li = event.target.closest('.task-item');
+       const id = Number(li.dataset.id);
+       if (event.target.matches('.task-checkbox')) toggleTask(id);
+       if (event.target.closest('.task-delete'))   deleteTask(id);
+   });
+
+RÈGLES D'OR :
+   - DOM = reflet du state (jamais la source)
+   - [...tasks].sort() (pas tasks.sort())
+   - textContent (jamais innerHTML pour du contenu user)
+   - event.preventDefault() sur submit
+   - event.target.closest() pour remonter
+   - renderTasks() après CHAQUE modif du state

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Cookie consent banner accessible en HTML, CSS et JavaScript.">
+    <meta name="author" content="Your Name">
+
+    <meta property="og:title" content="Cookie Consent">
+    <meta property="og:description" content="Bannière de consentement aux cookies.">
+    <meta property="og:type" content="website">
+
+    <title>Cookie Consent</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========== CONTENU DE LA PAGE (SKELETON) ========== -->
+    <main class="page">
+
+        <!-- Header skeleton -->
+        <header class="skeleton-header">
+            <div class="skeleton skeleton-logo"></div>
+            <div class="skeleton-nav">
+                <span class="skeleton skeleton-nav-item"></span>
+                <span class="skeleton skeleton-nav-item"></span>
+                <span class="skeleton skeleton-nav-item"></span>
+            </div>
+        </header>
+
+        <!-- Hero skeleton -->
+        <div class="skeleton skeleton-hero"></div>
+
+        <!-- Barre skeleton -->
+        <div class="skeleton skeleton-bar"></div>
+
+        <!-- Paragraphe skeleton -->
+        <div class="skeleton-text">
+            <div class="skeleton-text-col">
+                <span class="skeleton skeleton-line"></span>
+                <span class="skeleton skeleton-line"></span>
+                <span class="skeleton skeleton-line"></span>
+                <span class="skeleton skeleton-line"></span>
+            </div>
+            <div class="skeleton-text-col">
+                <span class="skeleton skeleton-line"></span>
+                <span class="skeleton skeleton-line"></span>
+                <span class="skeleton skeleton-line"></span>
+                <span class="skeleton skeleton-line"></span>
+            </div>
+        </div>
+
+        <!-- Blocs skeleton -->
+        <div class="skeleton-blocks">
+            <div class="skeleton skeleton-block"></div>
+            <div class="skeleton skeleton-block"></div>
+        </div>
+
+    </main>
+
+    <!-- ========== POPUP COOKIES ========== -->
+    <aside
+        class="cookie-banner"
+        id="cookie-banner"
+        role="dialog"
+        aria-live="polite"
+        aria-label="Consentement aux cookies"
+    >
+        <!-- Bouton de fermeture -->
+        <button
+            type="button"
+            class="cookie-close"
+            id="cookie-close"
+            aria-label="Fermer la bannière de cookies"
+        >
+            ✕
+        </button>
+
+        <!-- Icône cookie -->
+        <div class="cookie-icon" aria-hidden="true">🍪</div>
+
+        <!-- Message -->
+        <p class="cookie-message">
+            We use cookies to improve your user experience.
+        </p>
+
+        <!-- Bouton d'acceptation -->
+        <button
+            type="button"
+            class="cookie-accept"
+            id="cookie-accept"
+        >
+            I like Cookies
+        </button>
+
+    </aside>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

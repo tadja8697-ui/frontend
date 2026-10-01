@@ -1,0 +1,211 @@
+🎯 ÉTAPE 5 : Explication détaillée
+🔹 5.1 — Le CORS proxy (à comprendre absolument)
+javascript
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+const REDDIT_API  = 'https://www.reddit.com/r';
+
+const url = `${CORS_PROXY}${encodeURIComponent(`${REDDIT_API}/${subreddit}.json?limit=20`)}`;
+Le problème : Reddit bloque les fetch depuis le navigateur (CORS).
+
+La solution du proxy :
+
+Ton navigateur appelle allorigins.win.
+
+allorigins.win appelle Reddit depuis son serveur.
+
+Reddit répond à allorigins (pas de CORS car c'est serveur-à-serveur).
+
+allorigins renvoie la réponse à ton navigateur avec les bons headers CORS.
+
+💡 Analogie : Reddit refuse de parler à ton navigateur. allorigins sert d'intermédiaire et transmet les messages.
+
+⚠️ En production : ce n'est PAS acceptable :
+
+Dépendance à un service tiers.
+
+Latence supplémentaire.
+
+Le proxy peut logger tes requêtes.
+
+La vraie solution : un backend proxy que tu contrôles :
+
+javascript
+// Côté serveur Node/Express
+app.get('/api/reddit/:sub', async (req, res) => {
+    const response = await fetch(`https://www.reddit.com/r/${req.params.sub}.json`);
+    const data = await response.json();
+    res.json(data);
+});
+🔹 5.2 — Le state par lane (essentiel)
+javascript
+lanes = [
+    { id: 'lane-1', subreddit: 'javascript', posts: [], isLoading: true, error: null },
+    ...
+];
+💡 Chaque lane a son propre isLoading et error. Si "javascript" plante, "learnprogramming" continue à fonctionner.
+
+⚠️ Anti-pattern :
+
+javascript
+// ❌ UN SEUL isLoading global
+let isLoading = false;
+→ Si tu rafraîchis une lane, TOUTES les lanes semblent en chargement. Mauvais.
+
+🔹 5.3 — Le Promise.all pour paralléliser
+javascript
+await Promise.all(lanes.map((lane) => refreshLane(lane.id)));
+💡 Promise.all : lance toutes les promesses en parallèle et attend qu'elles soient TOUTES terminées.
+
+Différence avec une boucle for...of :
+
+javascript
+// ❌ SÉRIEL : 2 secondes + 2 secondes = 4 secondes
+for (const lane of lanes) {
+    await refreshLane(lane.id);
+}
+
+// ✅ PARALLÈLE : max(2s, 2s) = 2 secondes
+await Promise.all(lanes.map((lane) => refreshLane(lane.id)));
+Avec 10 lanes, la différence est ÉNORME. ⚡
+
+🔹 5.4 — Le menu contextuel (positionnement)
+javascript
+const rect = menuBtn.getBoundingClientRect();
+openContextMenu(laneEl.dataset.id, rect.left, rect.bottom + 4);
+💡 getBoundingClientRect() : renvoie la position et la taille d'un élément par rapport au viewport.
+
+Propriétés retournées : top, right, bottom, left, width, height, x, y.
+
+On place le menu :
+
+x = rect.left (aligné à gauche du bouton).
+
+y = rect.bottom + 4 (juste sous le bouton).
+
+💡 Clamp aux bords : si le menu dépasse à droite ou en bas, on le repositionne :
+
+javascript
+const posX = Math.min(x, window.innerWidth - menuWidth - padding);
+const posY = Math.min(y, window.innerHeight - menuHeight - padding);
+🔹 5.5 — La délégation d'événements (rappel)
+javascript
+lanesContainer.addEventListener('click', function (event) {
+    const menuBtn = event.target.closest('[data-action="open-menu"]');
+    ...
+});
+💡 Un seul listener sur le conteneur, qui gère toutes les lanes (même celles ajoutées plus tard). Pattern déjà vu au Task Tracker.
+
+🔹 5.6 — Les 2 listeners document.click
+javascript
+// 1. Fermer le menu contextuel si clic ailleurs
+document.addEventListener('click', function (event) {
+    if (!contextMenu.hidden && !contextMenu.contains(event.target)) {
+        closeContextMenu();
+    }
+});
+
+// 2. Fermer la modale si clic sur l'overlay
+modalOverlay.addEventListener('click', function (event) {
+    if (event.target === modalOverlay) closeModal();
+});
+⚠️ Piège : si on ne fait pas event.stopPropagation() sur le clic du menu (⋮), le clic remonte au document et ferme le menu immédiatement après l'avoir ouvert.
+
+C'est pour ça qu'on a event.stopPropagation() dans le handler du bouton menu.
+
+🔹 5.7 — La persistance (localStorage)
+javascript
+// Sauvegarder : UNIQUEMENT les noms de subreddits
+localStorage.setItem(STORAGE_KEY, JSON.stringify(
+    lanes.map((lane) => lane.subreddit)
+));
+
+// Charger au démarrage
+const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+💡 Pourquoi ne pas sauvegarder les posts ?
+
+Les posts changent en permanence.
+
+Ils peuvent être volumineux (20 posts × N lanes).
+
+Au démarrage, on re-fetch → données fraîches.
+
+On sauvegarde uniquement la "configuration" (liste des subreddits).
+
+🔹 5.8 — Le try/catch sur localStorage
+javascript
+try {
+    localStorage.setItem(...);
+} catch (e) {
+    console.warn('Impossible d\'écrire :', e);
+}
+💡 Pourquoi ? En navigation privée (Firefox), localStorage lance une exception. Sans try/catch → ton script plante.
+
+🔹 5.9 — La normalisation des posts
+javascript
+return data.data.children.map((child) => ({
+    id: child.data.id,
+    title: child.data.title,
+    author: child.data.author,
+    score: child.data.score,
+    permalink: `https://www.reddit.com${child.data.permalink}`,
+}));
+💡 Pourquoi normaliser ?
+
+L'API Reddit renvoie une structure complexe et verbeuse (child.data.xxx).
+
+On extrait uniquement ce qu'on utilise → objet simple.
+
+Si l'API change, on n'a qu'UN SEUL endroit à modifier.
+
+Pattern pro : toujours normaliser les données d'API avant de les utiliser.
+
+🔹 5.10 — L'accessibilité de la modale
+html
+<div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+Attribut	Rôle
+role="dialog"	C'est une boîte de dialogue
+aria-modal="true"	Elle bloque l'interaction avec le reste
+aria-labelledby	Lie le titre à la modale
+💡 Échap ferme la modale (bonne pratique). On aurait aussi dû :
+
+Piéger le focus dans la modale (focus trap).
+
+Redonner le focus au "+" à la fermeture.
+
+Pour aller plus loin : cherche "focus trap modal" — c'est un pattern avancé mais essentiel pour l'a11y.
+
+Le pattern "multi-lane app" :
+
+1. STATE : tableau de lanes
+   lanes = [
+     { id, subreddit, posts: [], isLoading, error }
+   ]
+   → CHAQUE lane a son propre état
+
+2. FETCH PARALLÈLE
+   await Promise.all(lanes.map(l => refreshLane(l.id)));
+   → 10 lanes en 2s au lieu de 20s (sériel)
+
+3. CORS PROXY
+   Reddit bloque le navigateur → passer par un proxy
+   En production : backend proxy
+
+4. PERSISTANCE
+   localStorage.setItem('key', JSON.stringify(
+       lanes.map(l => l.subreddit)  // UNIQUEMENT les noms
+   ));
+
+5. MENU CONTEXTUEL
+   getBoundingClientRect() pour positionner
+   event.stopPropagation() sur le trigger
+   Listener document.click pour fermer
+
+6. DÉLÉGATION D'ÉVÉNEMENTS
+   Un seul listener sur le conteneur
+
+RÈGLES D'OR :
+   - Chaque élément = son propre état (loading/error)
+   - Promise.all pour paralléliser
+   - Toujours un proxy pour les APIs CORS-bloquées
+   - localStorage : que la config, pas les données
+   - stopPropagation sur les clics internes

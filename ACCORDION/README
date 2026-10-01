@@ -1,0 +1,206 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — L'animation de hauteur : max-height
+css
+.accordion-panel {
+    max-height: 0;
+    padding: 0 var(--space-lg);
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+}
+
+.accordion-item.is-open .accordion-panel {
+    max-height: 500px;
+    padding: var(--space-lg);
+    opacity: 1;
+}
+Décomposons les 3 propriétés animées :
+
+Propriété	État fermé	État ouvert	Rôle
+max-height	0	500px	Fait grandir le panneau
+padding	0 X	1.5rem X	Ajoute l'espace intérieur
+opacity	0	1	Fait apparaître le texte
+💡 Pourquoi overflow: hidden ? Sans lui, le contenu dépasserait du panneau fermé. Avec, il est coupé proprement.
+
+⚠️ Pourquoi max-height et pas height ?
+
+height: auto n'est PAS animable en CSS.
+
+max-height accepte une valeur fixe (500px) → animable.
+
+⚠️ Choisir la valeur de max-height : elle doit être plus grande que la réponse la plus longue. 500px suffit largement pour 3-4 lignes de texte. Pour un texte très long, ajuster.
+
+🔹 4.2 — La rotation du chevron
+css
+.chevron {
+    transition: transform 0.3s ease;
+}
+
+.accordion-item.is-open .chevron {
+    transform: rotate(180deg);
+}
+💡 rotate(180deg) fait pivoter la flèche de 180°. Comme elle pointe vers le bas au départ, elle pointe vers le haut une fois tournée. Simple et élégant.
+
+🔹 4.3 — La logique "un seul ouvert"
+javascript
+const item = trigger.closest('.accordion-item');
+const isOpen = item.classList.contains('is-open');
+
+closeAllItems();
+
+if (!isOpen) {
+    openItem(item);
+}
+Décomposons :
+
+On trouve l'item parent du bouton cliqué.
+
+On vérifie s'il est déjà ouvert (booléen isOpen).
+
+On ferme TOUJOURS tous les items.
+
+Si l'item n'était pas ouvert → on l'ouvre.
+
+💡 Pourquoi ce pattern ? Il gère 2 cas en 1 :
+
+Ouvrir un nouveau → on ferme tous les autres, on ouvre le nouveau.
+
+Fermer le courant → on ferme tous les autres, et on ne ré-ouvre pas le courant.
+
+Sans ce pattern, on aurait besoin de conditions séparées pour chaque cas.
+
+🔹 4.4 — trigger.closest('.accordion-item')
+javascript
+const item = trigger.closest('.accordion-item');
+💡 .closest(selector) remonte dans les parents jusqu'à trouver un ancêtre correspondant. On connaît déjà ce pattern depuis l'exercice 11.
+
+Alternative : trigger.parentElement (mais moins robuste si la structure change).
+
+🔹 4.5 — Le pattern ARIA accordion
+html
+<button
+    aria-expanded="false"
+    aria-controls="panel-1"
+>
+Attribut	Rôle
+aria-expanded	Signale si le panneau est ouvert ou fermé
+aria-controls	Lie le bouton au panneau qu'il contrôle
+💡 Ce sont ces attributs qui rendent l'accordion compréhensible aux lecteurs d'écran :
+
+"What is roadmap.sh?, bouton, réduit"
+
+(clic) → "développé"
+
+Mise à jour en JS :
+
+javascript
+trigger.setAttribute('aria-expanded', 'true');
+🔹 4.6 — Les <button> natifs (accessibilité gratuite)
+html
+<button type="button" class="accordion-trigger">
+💡 Avantages :
+
+Focusable au clavier automatiquement.
+
+Activable par Entrée et Espace automatiquement.
+
+Rôle ARIA button implicite.
+
+On n'a RIEN à faire en JS pour la navigation de base. C'est ça, la beauté du HTML sémantique.
+
+⚠️ type="button" : empêche la soumission si l'accordion est dans un <form>.
+
+🔹 4.7 — Le pattern "toggle avec fermeture forcée"
+Le comportement demandé est : un seul ouvert à la fois. Mais que se passe-t-il si on clique sur l'item ouvert ?
+
+2 stratégies possibles :
+
+Stratégie	Comportement
+A. Toggle strict	Cliquer sur l'ouvert le ferme
+B. Toujours un ouvert	Cliquer sur l'ouvert ne fait rien
+💡 On fait A (comme demandé) : cliquer sur l'ouvert le ferme. On peut tout fermer.
+
+Test rapide dans la vraie vie : sur Bootstrap, beaucoup d'accordions suivent A.
+
+🔹 4.8 — La navigation clavier (bonus)
+javascript
+if (event.key === 'ArrowDown') {
+    targetIndex = (index + 1) % items.length;
+}
+💡 ArrowDown / ArrowUp : on se déplace entre les boutons.
+💡 Home / End : on va au premier / dernier.
+💡 Modulo % : navigation circulaire (après le dernier, on revient au premier).
+
+⚠️ event.preventDefault() : empêche le scroll de la page quand on appuie sur les flèches.
+
+Note : On utilise Array.from(items) pour convertir la NodeList en tableau, car .indexOf() n'existe pas sur les NodeList.
+
+Le pattern "accordion" en 5 règles :
+
+1. HTML sémantique
+   <button aria-expanded="false" aria-controls="panel-1">Question</button>
+   <div id="panel-1">Réponse</div>
+
+2. CSS animation avec MAX-HEIGHT
+   .accordion-panel {
+       max-height: 0;
+       padding: 0 1.5rem;
+       overflow: hidden;
+       transition: max-height .3s, padding .3s, opacity .3s;
+   }
+   .accordion-item.is-open .accordion-panel {
+       max-height: 500px;
+       padding: 1.5rem;
+       opacity: 1;
+   }
+
+3. Rotation du chevron
+   .accordion-item.is-open .chevron {
+       transform: rotate(180deg);
+   }
+
+4. Logique JS "un seul ouvert"
+   const item = trigger.closest('.accordion-item');
+   const isOpen = item.classList.contains('is-open');
+   closeAllItems();
+   if (!isOpen) openItem(item);
+
+5. Navigation clavier
+   ↑ ↓ Home End
+   + focus() sur le bouton cible
+
+Règle d'or :
+   max-height = toujours une valeur GÉNÉREUSE
+   (500px pour un texte de 3-4 lignes).
+
+💡 Astuce de prof
+L'accordion est le composant UI le plus demandé en entreprise. Pourquoi ?
+
+Gain de place : cache du contenu sans le supprimer.
+
+UX : l'utilisateur choisit ce qu'il veut voir.
+
+SEO : le contenu est dans le HTML (donc indexable), juste caché visuellement.
+
+Les 3 règles à graver :
+1. max-height est un compromis. Le CSS moderne propose grid-template-rows: 0fr → 1fr (plus élégant), mais max-height reste le standard.
+
+2. Toujours <button> pour le déclencheur. Jamais <div>.
+
+3. Un seul ouvert à la fois = "accordion", plusieurs ouverts = "disclosure". Le choix dépend du contexte.
+
+Comparaison avec les Tabs (exercice 9) :
+Tabs	Accordion
+Layout	Horizontal	Vertical
+Navigation	Onglets	Boutons empilés
+Animation	opacity	max-height
+Contenu	Plusieurs panneaux côte à côte	Réponses empilées
+Cas d'usage	Sections de contenu	FAQ, paramètres
+Tu vois la ressemblance ? Les patterns d'état (.is-active / .is-open) et ARIA (aria-expanded / aria-selected) sont très similaires. C'est ça, la beauté du web.
+
+Pour aller plus loin :
+W3C ARIA Accordion Pattern : w3.org/WAI/ARIA/apg/patterns/accordion
+
+grid-template-rows animable : CSS Tricks - Animating auto
+
+Bootstrap Accordion (pour comparer) : getbootstrap.com/docs/5.3/components/accordion
+

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Acme Pricing - Simple plans for every team size. Basic, Pro and Business.">
+    <meta name="author" content="Acme">
+
+    <title>Pricing - Acme</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="page">
+
+        <header class="page-header">
+            <h1>Simple, transparent pricing</h1>
+            <p>Choose the plan that fits your team.</p>
+        </header>
+
+        <!-- ========== CONTENEUR DES CARTES ========== -->
+        <section class="cards" aria-label="Plans tarifaires">
+
+            <!-- ---------- CARTE 1 : BASIC ---------- -->
+            <article class="card">
+                <header class="card-header">
+                    <h2 class="card-name">Basic</h2>
+
+                    <p class="card-price">
+                        <span class="price-amount">$9</span>
+                        <span class="price-period">/mo</span>
+                    </p>
+
+                    <p class="card-tagline">
+                        Essential features to get started.
+                    </p>
+                </header>
+
+                <hr class="card-divider">
+
+                <ul class="card-features">
+                    <li>1 user</li>
+                    <li>5 projects</li>
+                    <li>10 GB storage</li>
+                    <li>Email support</li>
+                    <li>Basic reports</li>
+                </ul>
+
+                <button type="button" class="card-btn">
+                    Choose Basic
+                </button>
+            </article>
+
+            <!-- ---------- CARTE 2 : PRO (mise en avant) ---------- -->
+            <article class="card card--featured">
+
+                <!-- Badge absolu -->
+                <p class="card-badge">Most popular</p>
+
+                <header class="card-header">
+                    <h2 class="card-name">Pro</h2>
+
+                    <p class="card-price">
+                        <span class="price-amount">$19</span>
+                        <span class="price-period">/mo</span>
+                    </p>
+
+                    <p class="card-tagline">
+                        Advanced tools for growing teams.
+                    </p>
+                </header>
+
+                <hr class="card-divider">
+
+                <ul class="card-features">
+                    <li>5 users</li>
+                    <li>50 projects</li>
+                    <li>100 GB storage</li>
+                    <li>Priority support</li>
+                    <li>Advanced reports</li>
+                </ul>
+
+                <button type="button" class="card-btn">
+                    Choose Pro
+                </button>
+            </article>
+
+            <!-- ---------- CARTE 3 : BUSINESS ---------- -->
+            <article class="card">
+                <header class="card-header">
+                    <h2 class="card-name">Business</h2>
+
+                    <p class="card-price">
+                        <span class="price-amount">$49</span>
+                        <span class="price-period">/mo</span>
+                    </p>
+
+                    <p class="card-tagline">
+                        Complete solution for large organizations.
+                    </p>
+                </header>
+
+                <hr class="card-divider">
+
+                <ul class="card-features">
+                    <li>Unlimited users</li>
+                    <li>Unlimited projects</li>
+                    <li>1 TB storage</li>
+                    <li>24/7 support</li>
+                    <li>Custom reports</li>
+                </ul>
+
+                <button type="button" class="card-btn">
+                    Choose Business
+                </button>
+            </article>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

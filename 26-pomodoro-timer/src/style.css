@@ -1,0 +1,377 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --color-text: #ffffff;
+    --color-text-muted: rgba(255, 255, 255, 0.7);
+    --color-bg-work: #dc2626;
+    --color-bg-short: #16a34a;
+    --color-bg-long: #2563eb;
+    --color-btn: rgba(255, 255, 255, 0.15);
+    --color-btn-hover: rgba(255, 255, 255, 0.25);
+    --color-focus: #ffffff;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 12px;
+    --radius-lg: 20px;
+}
+
+/* ============================================================
+   2. BASE + COULEURS PAR MODE
+   ============================================================ */
+
+html, body, #root {
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s ease;
+}
+
+/* Couleur de fond selon le mode (classe sur .app) */
+.app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-lg);
+    transition: background-color 0.4s ease;
+}
+
+.app.mode--work        { background-color: var(--color-bg-work); }
+.app.mode--short-break { background-color: var(--color-bg-short); }
+.app.mode--long-break  { background-color: var(--color-bg-long); }
+
+/* ============================================================
+   3. HEADER
+   ============================================================ */
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: var(--space-xl);
+}
+
+.app-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.icon-btn:hover {
+    background-color: var(--color-btn);
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+.icon-btn:focus-visible {
+    outline: none;
+    background-color: var(--color-btn);
+    box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+/* ============================================================
+   4. CONTENU PRINCIPAL
+   ============================================================ */
+
+.app-main {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* ============================================================
+   5. TIMER (le gros affichage)
+   ============================================================ */
+
+.timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+
+    padding: var(--space-xl);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+
+    min-height: 260px;
+}
+
+.timer-mode {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-muted);
+}
+
+.timer-time {
+    font-size: clamp(4rem, 20vw, 7rem);
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   6. CONTROLS
+   ============================================================ */
+
+.controls {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    align-items: center;
+}
+
+.control-btn {
+    padding: 0.85rem 1.5rem;
+
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+
+    background-color: var(--color-btn);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.control-btn:hover {
+    background-color: var(--color-btn-hover);
+}
+
+.control-btn:active {
+    transform: scale(0.97);
+}
+
+.control-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-focus);
+}
+
+/* Bouton principal (Start/Pause) plus grand */
+.control-btn--primary {
+    padding: 0.85rem 2.5rem;
+    background-color: white;
+    color: #1a1a1a;
+    font-size: 1.1rem;
+}
+
+.control-btn--primary:hover {
+    background-color: #f5f5f5;
+}
+
+/* ============================================================
+   7. SESSION INFO
+   ============================================================ */
+
+.session-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    text-align: center;
+}
+
+.session-counter {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+}
+
+.session-counter strong {
+    color: white;
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+.session-cycle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+/* Mode switcher */
+.mode-switcher {
+    display: flex;
+    gap: var(--space-sm);
+
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 4px;
+    border-radius: 999px;
+}
+
+.mode-btn {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mode-btn:hover {
+    color: white;
+}
+
+.mode-btn.is-active {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: white;
+    font-weight: 600;
+}
+
+.mode-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-focus);
+}
+
+/* ============================================================
+   8. SETTINGS MODAL
+   ============================================================ */
+
+.settings-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: var(--space-md);
+}
+
+.settings-modal {
+    width: 100%;
+    max-width: 400px;
+    padding: var(--space-xl);
+
+    background-color: #1a1a1a;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.settings-modal h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+}
+
+.settings-field span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
+.settings-field input {
+    padding: 0.75rem var(--space-md);
+
+    font-family: inherit;
+    font-size: 1rem;
+    color: white;
+
+    background-color: #2a2a2a;
+    border: 2px solid transparent;
+    border-radius: var(--radius);
+    outline: none;
+
+    transition: border-color 0.2s ease;
+}
+
+.settings-field input:focus-visible {
+    border-color: white;
+}
+
+.settings-actions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
+    margin-top: var(--space-lg);
+}
+
+/* ============================================================
+   9. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .timer {
+        min-height: 220px;
+        padding: var(--space-lg);
+    }
+
+    .controls {
+        flex-wrap: wrap;
+    }
+
+    .control-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .control-btn--primary {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* Respecte les préférences utilisateur de réduction de mouvement */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}

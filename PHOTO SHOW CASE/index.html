@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Photo showcase - a collection of landscapes, city scenes and a featured video.">
+    <meta name="author" content="Your Name">
+
+    <title>Photo Showcase - MyGallery</title>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header>
+        <a href="/"><strong>MyGallery</strong></a>
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/gallery" aria-current="page">Gallery</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ========== MAIN ========== -->
+    <main>
+
+        <h1>Photo Showcase</h1>
+
+        <p>
+            A small collection of images captured during recent trips.
+            Click on any image to open the full-size version.
+        </p>
+
+        <!-- ========== SECTION : Galerie ========== -->
+        <section>
+            <h2>Featured Photos</h2>
+
+            <!-- ---------- FIGURE 1 : Montagne ---------- -->
+            <figure>
+                <img
+                    src="https://picsum.photos/id/1018/800/600"
+                    alt="Mountain peaks silhouetted against an orange sky at sunset, with mist in the valley."
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                >
+                <figcaption>
+                    Sunset over the Alps — Chamonix, France. Photo taken in October 2024.
+                </figcaption>
+            </figure>
+
+            <!-- ---------- FIGURE 2 : Plage ---------- -->
+            <figure>
+                <img
+                    src="https://picsum.photos/id/1015/800/600"
+                    alt="A rocky beach at low tide with a smooth, wet sandy surface and gentle waves."
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                >
+                <figcaption>
+                    Low tide on the coast of Brittany, France.
+                </figcaption>
+            </figure>
+
+            <!-- ---------- FIGURE 3 : Ville ---------- -->
+            <figure>
+                <img
+                    src="https://picsum.photos/id/1019/800/600"
+                    alt="A narrow cobblestone street lined with old European buildings and a small café."
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                >
+                <figcaption>
+                    Old town of Lyon, France — a typical street in the historic district.
+                </figcaption>
+            </figure>
+
+            <!-- ---------- IMAGE 4 : SANS figure (simple img) ---------- -->
+            <img
+                src="https://picsum.photos/id/1024/800/600"
+                alt="A deer standing in a misty forest clearing, surrounded by tall pine trees."
+                width="800"
+                height="600"
+                loading="lazy"
+            >
+
+            <!-- ---------- IMAGE 5 : SANS figure ---------- -->
+            <img
+                src="https://picsum.photos/id/1039/800/600"
+                alt="Aerial view of a winding river cutting through a green forested valley."
+                width="800"
+                height="600"
+                loading="lazy"
+            >
+
+            <!-- ---------- IMAGE 6 : SANS figure ---------- -->
+            <img
+                src="https://picsum.photos/id/1043/800/600"
+                alt="A quiet lake reflecting the surrounding mountains at early morning."
+                width="800"
+                height="600"
+                loading="lazy"
+            >
+
+            <!-- ---------- IMAGE 7 : DÉCORATIVE ---------- -->
+            <!--
+                Image décorative : alt="" (vide, mais présent).
+                Le lecteur d'écran l'IGNORE complètement.
+                Sans alt, il lirait "image 7 décoration.jpg" → bruit inutile.
+            -->
+            <img
+                src="https://picsum.photos/id/1050/1200/100"
+                alt=""
+                width="1200"
+                height="100"
+                loading="lazy"
+            >
+
+        </section>
+
+        <!-- ========== SECTION : Vidéo ========== -->
+        <section>
+            <h2>Featured Video</h2>
+
+            <p>A short clip from our latest trip to the Alps.</p>
+
+            <figure>
+                <video
+                    controls
+                    poster="https://picsum.photos/id/1018/1280/720"
+                    width="1280"
+                    height="720"
+                    preload="metadata"
+                >
+                    <!-- Sources multiples : le navigateur choisit le premier qu'il supporte -->
+                    <source
+                        src="https://cdn.coverr.co/videos/coverr-a-waterfall-in-the-forest-1080p.mp4"
+                        type="video/mp4"
+                    >
+                    <source
+                        src="video.webm"
+                        type="video/webm"
+                    >
+
+                    <!-- Texte de fallback : affiché si <video> n'est pas supporté -->
+                    Votre navigateur ne supporte pas la balise vidéo.
+                    Vous pouvez
+                    <a href="https://example.com/video.mp4">télécharger la vidéo</a>
+                    à la place.
+                </video>
+
+                <figcaption>
+                    Aerial footage captured during a hiking trip in Chamonix, France.
+                </figcaption>
+            </figure>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer>
+        <p>© 2026 MyGallery. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-bg-page: #f9fafb;
+    --color-bg-hover: #f3f4f6;
+    --color-bg-selected: #eff6ff;
+    --color-border: #1a1a1a;
+    --color-border-light: #e5e7eb;
+    --color-accent: #2563eb;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+
+    --radius: 12px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg-page);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 4rem 1rem;
+}
+
+.page {
+    width: 100%;
+    max-width: 360px;
+}
+
+.page h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.hint {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+/* ============================================================
+   3. LE COMPOSANT DROPDOWN
+   ============================================================ */
+
+.dropdown {
+    position: relative;    /* ← Référentiel pour le menu en absolute */
+    width: 100%;
+}
+
+/* ---------- TRIGGER (le bouton) ---------- */
+
+.dropdown-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+
+    width: 100%;
+    padding: 0.75rem var(--space-md);
+
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    text-align: left;
+
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dropdown-trigger:hover {
+    border-color: var(--color-accent);
+}
+
+.dropdown-trigger:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Flèche (chevron) */
+.dropdown-chevron {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+/* Rotation de la flèche quand le menu est ouvert */
+.dropdown.is-open .dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+/* ---------- MENU (la liste) ---------- */
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);       /* Juste sous le trigger + 8px */
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    list-style: none;
+
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+    /* État initial : caché */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s;
+}
+
+/* État ouvert : visible */
+.dropdown.is-open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ---------- ITEM ---------- */
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+
+    padding: 0.75rem var(--space-md);
+
+    font-size: 1rem;
+    color: var(--color-text);
+    cursor: pointer;
+
+    transition: background-color 0.15s ease;
+}
+
+/* Sépare visuellement les items entre eux */
+.dropdown-item + .dropdown-item {
+    border-top: 1px solid var(--color-border-light);
+}
+
+.dropdown-item:hover {
+    background-color: var(--color-bg-hover);
+}
+
+/* Item actuellement FOCUS au clavier */
+.dropdown-item.is-focused {
+    background-color: var(--color-bg-hover);
+    outline: none;
+}
+
+/* Item SÉLECTIONNÉ */
+.dropdown-item.is-selected {
+    background-color: var(--color-bg-selected);
+    font-weight: 600;
+}
+
+/* Coche ✓ sur l'item sélectionné */
+.dropdown-item.is-selected::after {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-text);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   4. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .page h1 {
+        font-size: 1.25rem;
+    }
+}

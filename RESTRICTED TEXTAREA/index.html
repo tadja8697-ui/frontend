@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Textarea avec compteur de caractères en temps réel et limite de 250 caractères.">
+    <meta name="author" content="Your Name">
+
+    <meta property="og:title" content="Restricted Textarea">
+    <meta property="og:description" content="Compteur de caractères en temps réel.">
+    <meta property="og:type" content="website">
+
+    <title>Restricted Textarea</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="page">
+
+        <h1>Write your Message</h1>
+
+        <!-- ========== LE COMPOSANT ========== -->
+        <div class="textarea-wrapper">
+
+            <label for="message" class="sr-only">
+                Votre message
+            </label>
+
+            <textarea
+                id="message"
+                class="textarea"
+                placeholder="Start typing ..."
+                aria-describedby="char-counter"
+                data-max-length="250"
+            ></textarea>
+
+            <div class="textarea-footer">
+                <span
+                    id="char-counter"
+                    class="char-counter"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
+                    <span id="char-current">0</span> / <span id="char-max">250</span>
+                </span>
+            </div>
+
+        </div>
+
+        <!-- ========== Zone de debug (facultatif, pour comprendre) ========== -->
+        <p class="hint">
+            Essayez de taper plus de 250 caractères pour voir la bordure devenir rouge.
+        </p>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

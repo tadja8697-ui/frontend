@@ -1,0 +1,173 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #9ca3af;
+    --color-bg: #ffffff;
+    --color-bg-alt: #f9fafb;
+    --color-border: #1a1a1a;
+    --color-border-focus: #2563eb;
+    --color-border-error: #dc2626;
+    --color-error: #dc2626;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 16px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-xl) var(--space-md);
+}
+
+.page {
+    width: 100%;
+    max-width: 600px;
+}
+
+.page h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+}
+
+/* Classe pour cacher visuellement un élément mais le garder accessible */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================================
+   3. WRAPPER DE LA TEXTAREA
+   ============================================================ */
+
+.textarea-wrapper {
+    position: relative;                /* Pour positionner le footer en absolute */
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    background-color: var(--color-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: var(--space-lg);
+}
+
+/* Focus sur la textarea → bordure bleue */
+.textarea-wrapper:focus-within {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* ⚠️ ÉTAT "LIMITE ATTEINTE" → bordure rouge */
+.textarea-wrapper.is-limit-reached {
+    border-color: var(--color-border-error);
+}
+
+.textarea-wrapper.is-limit-reached:focus-within {
+    border-color: var(--color-border-error);
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+}
+
+/* ============================================================
+   4. LA TEXTAREA
+   ============================================================ */
+
+.textarea {
+    display: block;
+    width: 100%;
+    min-height: 160px;
+    border: none;
+    outline: none;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text);
+    background: transparent;
+}
+
+.textarea::placeholder {
+    color: var(--color-text-muted);
+}
+
+/* ============================================================
+   5. LE FOOTER (compteur)
+   ============================================================ */
+
+.textarea-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-sm);
+}
+
+.char-counter {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+}
+
+/* ⚠️ Quand la limite est atteinte → compteur ROUGE */
+.textarea-wrapper.is-limit-reached .char-counter {
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+/* ============================================================
+   6. HINT (facultatif)
+   ============================================================ */
+
+.hint {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+/* ============================================================
+   7. BONUS : DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #f5f5f5;
+        --color-text-muted: #9ca3af;
+        --color-bg: #121212;
+        --color-bg-alt: #1f1f1f;
+        --color-border: #f5f5f5;
+    }
+
+    .textarea-wrapper {
+        background-color: var(--color-bg);
+    }
+}

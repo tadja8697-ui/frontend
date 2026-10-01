@@ -1,0 +1,195 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-bg: #ffffff;
+    --color-border: #1a1a1a;
+    --color-border-focus: #2563eb;
+    --color-btn: #4b5563;
+    --color-btn-hover: #374151;
+    --color-error: #dc2626;
+    --color-accent: #2563eb;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 8px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-xl) var(--space-md);
+}
+
+.page {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+}
+
+.page h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text);
+}
+
+/* ============================================================
+   3. FORMULAIRE
+   ============================================================ */
+
+.age-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: left;
+}
+
+.form-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem var(--space-md);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.form-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.form-input:focus-visible {
+    outline: none;
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Message d'erreur */
+.error-message {
+    color: var(--color-error);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.error-message[hidden] {
+    display: none;
+}
+
+/* Bouton */
+.submit-btn {
+    width: 100%;
+    padding: 0.85rem var(--space-md);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--color-btn);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: var(--space-sm);
+}
+
+.submit-btn:hover {
+    background-color: var(--color-btn-hover);
+}
+
+.submit-btn:active {
+    transform: scale(0.99);
+}
+
+.submit-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5);
+}
+
+/* ============================================================
+   4. RÉSULTAT
+   ============================================================ */
+
+.result {
+    margin-top: var(--space-xl);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    min-height: 1.6em;      /* Évite le saut de layout */
+}
+
+.result strong {
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+/* ============================================================
+   5. FLATPICKR (customisation du thème)
+   ============================================================ */
+
+.flatpickr-calendar {
+    font-family: var(--font-main) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.flatpickr-day.selected {
+    background-color: var(--color-accent) !important;
+    border-color: var(--color-accent) !important;
+}
+
+.flatpickr-day.today {
+    border-color: var(--color-accent) !important;
+}
+
+/* ============================================================
+   6. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .page h1 {
+        font-size: 1.5rem;
+        margin-bottom: var(--space-lg);
+    }
+
+    .form-input,
+    .submit-btn {
+        font-size: 0.95rem;
+    }
+}

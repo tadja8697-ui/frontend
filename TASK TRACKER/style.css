@@ -1,0 +1,303 @@
+/* ============================================================
+   1. RESET & VARIABLES
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-text: #1a1a1a;
+    --color-text-muted: #9ca3af;
+    --color-text-done: #9ca3af;
+    --color-bg: #ffffff;
+    --color-bg-page: #f9fafb;
+    --color-bg-hover: #f3f4f6;
+    --color-border: #1a1a1a;
+    --color-border-light: #e5e7eb;
+    --color-accent: #2563eb;
+    --color-btn-bg: #0a0a0a;
+    --color-btn-hover: #262626;
+    --color-danger: #dc2626;
+    --color-focus: #2563eb;
+
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    --radius: 12px;
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+
+body {
+    font-family: var(--font-main);
+    color: var(--color-text);
+    background-color: var(--color-bg-page);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 3rem 1rem;
+}
+
+.page {
+    width: 100%;
+    max-width: 560px;
+}
+
+.page h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--space-lg);
+}
+
+/* Classe pour cacher visuellement un élément */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ============================================================
+   3. FORMULAIRE D'AJOUT
+   ============================================================ */
+
+.task-form {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.task-input {
+    flex: 1;
+    padding: 0.85rem var(--space-md);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.task-input:focus-visible {
+    border-color: var(--color-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.task-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    background-color: var(--color-btn-bg);
+    color: white;
+
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.task-submit:hover {
+    background-color: var(--color-btn-hover);
+}
+
+.task-submit:active {
+    transform: scale(0.95);
+}
+
+.task-submit:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5);
+}
+
+/* ============================================================
+   4. LISTE DES TÂCHES
+   ============================================================ */
+
+.task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Chaque tâche */
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--color-border-light);
+
+    animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Checkbox customisée ---------- */
+
+.task-checkbox-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* On cache la vraie checkbox mais on la garde accessible */
+.task-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* La "fausse" checkbox visuelle */
+.task-checkbox-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: 6px;
+
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    pointer-events: none;
+}
+
+/* État coché : fond noir + coche blanche */
+.task-checkbox:checked + .task-checkbox-visual {
+    background-color: var(--color-border);
+    border-color: var(--color-border);
+}
+
+.task-checkbox:checked + .task-checkbox-visual::after {
+    content: '✓';
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* Focus clavier visible */
+.task-checkbox:focus-visible + .task-checkbox-visual {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* ---------- Description ---------- */
+
+.task-description {
+    flex: 1;
+    font-size: 1rem;
+    color: var(--color-text);
+    word-break: break-word;
+    transition: color 0.2s ease;
+}
+
+/* ---------- Bouton supprimer ---------- */
+
+.task-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.task-delete:hover {
+    background-color: #fee2e2;
+    color: var(--color-danger);
+}
+
+.task-delete:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3);
+}
+
+/* ---------- Tâche COMPLÉTÉE ---------- */
+
+.task-item.is-completed .task-description {
+    text-decoration: line-through;
+    color: var(--color-text-done);
+}
+
+.task-item.is-completed {
+    opacity: 0.7;
+}
+
+/* ---------- État vide ---------- */
+
+.task-list:empty::after {
+    content: 'No tasks yet. Add one above!';
+    display: block;
+    padding: var(--space-xl);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+/* ============================================================
+   5. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .page h1 {
+        font-size: 1.25rem;
+    }
+
+    .task-input {
+        font-size: 0.9rem;
+        padding: 0.7rem var(--space-sm);
+    }
+
+    .task-description {
+        font-size: 0.95rem;
+    }
+}

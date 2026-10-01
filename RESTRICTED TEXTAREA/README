@@ -1,0 +1,158 @@
+🎯 ÉTAPE 4 : Explication détaillée
+🔹 4.1 — L'événement input : le meilleur ami des champs
+javascript
+textarea.addEventListener('input', updateCounter);
+💡 Se déclenche à CHAQUE modification :
+
+Frappe au clavier.
+
+Coller (Ctrl+V).
+
+Couper.
+
+Dictée vocale.
+
+Autocomplétion.
+
+Clic droit → Coller.
+
+Drag & drop de texte.
+
+💡 Différence avec keydown : keydown se déclenche avant que le texte change. input se déclenche après. C'est ce qu'on veut pour lire textarea.value.
+
+🔹 4.2 — Lire la longueur : .length
+javascript
+const length = textarea.value.length;
+💡 textarea.value = le texte actuel.
+💡 .length = le nombre de caractères.
+
+⚠️ Attention : .length compte les unités UTF-16, pas les vrais caractères. Un emoji comme 😀 compte pour 2 ! Pour un comptage strict, il faudrait utiliser [...value].length (spread operator). On s'en tient à la méthode simple pour ce projet.
+
+🔹 4.3 — Blocage du dépassement : slice
+javascript
+if (length > MAX_LENGTH) {
+    textarea.value = value.slice(0, MAX_LENGTH);
+}
+💡 slice(0, MAX_LENGTH) = "garde les caractères de l'index 0 à MAX_LENGTH (non inclus)".
+
+Analogie : c'est comme couper une bande de papier à la longueur voulue.
+
+⚠️ Pourquoi cette sécurité est obligatoire ? Parce que si tu colles un texte de 500 caractères d'un coup, l'événement input se déclenche une seule fois avec 500 caractères. Sans slice, le compteur afficherait "500 / 250" et la textarea contiendrait 500 caractères.
+
+Astuce pro : maxlength="250" en HTML fait la même chose automatiquement, mais on perd le contrôle visuel (compteur, bordure). Le JS permet les deux.
+
+🔹 4.4 — Le pattern "classe d'état"
+javascript
+if (length >= MAX_LENGTH) {
+    wrapper.classList.add('is-limit-reached');
+} else {
+    wrapper.classList.remove('is-limit-reached');
+}
+css
+.textarea-wrapper.is-limit-reached {
+    border-color: var(--color-border-error);
+}
+💡 Rappel du pattern : le JS gère l'état (.is-limit-reached), le CSS gère l'apparence (bordure rouge). Jamais de style dans le JS.
+
+🔹 4.5 — :focus-within pour le focus groupé
+css
+.textarea-wrapper:focus-within {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+💡 Pourquoi :focus-within et pas :focus ?
+
+La bordure est sur le wrapper, pas sur la textarea.
+
+:focus ne s'applique qu'à l'élément focalisé.
+
+:focus-within s'applique quand un enfant est focalisé.
+
+Analogie : "quand un de mes enfants a le focus, moi aussi j'ai une bordure bleue".
+
+🔹 4.6 — aria-live="polite" sur le compteur
+html
+<span aria-live="polite" aria-atomic="true">
+    <span id="char-current">0</span> / <span id="char-max">250</span>
+</span>
+💡 aria-live="polite" : le lecteur d'écran annonce les changements sans interrompre l'utilisateur.
+💡 aria-atomic="true" : annonce tout le contenu de la zone (pas juste le 0 ou le 250).
+
+⚠️ Sans aria-live, un utilisateur non-voyant n'a aucune idée de son compteur de caractères. Exclusion totale. C'est crucial.
+
+🔹 4.7 — sr-only : le label invisible
+css
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+💡 Utilité : cacher visuellement un élément sans le cacher aux lecteurs d'écran.
+
+Pourquoi ? Le <label> est obligatoire pour l'accessibilité, mais visuellement on préfère un placeholder. Solution : un label invisible + un placeholder.
+
+⚠️ Ne JAMAIS utiliser display: none ou visibility: hidden : ces propriétés cachent aussi aux lecteurs d'écran. Il faut cette technique précise.
+
+🔹 4.8 — data-max-length : la config côté HTML
+html
+<textarea data-max-length="250"></textarea>
+javascript
+const MAX_LENGTH = parseInt(textarea.dataset.maxLength, 10) || 250;
+💡 Avantage : pour changer la limite, on modifie le HTML, pas le JS. Bonne séparation.
+
+⚠️ parseInt(..., 10) : toujours préciser la base 10. Sinon, parseInt("010") peut être interprété en octal.
+
+⚠️ || 250 : fallback si data-max-length est absent ou invalide.
+
+🔹 4.9 — textarea.closest('.textarea-wrapper')
+javascript
+const wrapper = textarea.closest('.textarea-wrapper');
+💡 .closest(selector) : remonte dans les parents jusqu'à trouver l'ancêtre correspondant.
+
+Analogie : "Remonte dans l'arbre généalogique jusqu'à trouver mon ancêtre avec cette classe."
+
+Alternative : document.querySelector('.textarea-wrapper') — plus simple, mais moins robuste (ne marche qu'avec un seul composant sur la page).
+
+🔹 4.10 — .slice() vs .substring()
+javascript
+value.slice(0, MAX_LENGTH)       // ✅ Préféré
+value.substring(0, MAX_LENGTH)   // Marche aussi
+💡 .slice() est plus prévisible et accepte les négatifs (slice(-5)).
+
+Le pattern "compteur temps réel + limite" :
+
+1. HTML
+   <div class="textarea-wrapper">
+     <textarea data-max-length="250"></textarea>
+     <span aria-live="polite">
+       <span id="char-current">0</span> / <span id="char-max">250</span>
+     </span>
+   </div>
+
+2. CSS
+   .textarea-wrapper:focus-within { border-color: blue; }
+   .textarea-wrapper.is-limit-reached { border-color: red; }
+   .textarea-wrapper.is-limit-reached .char-counter { color: red; }
+
+3. JS
+   textarea.addEventListener('input', function () {
+       let value = textarea.value;
+       if (value.length > MAX_LENGTH) {
+           textarea.value = value.slice(0, MAX_LENGTH);
+       }
+       currentEl.textContent = textarea.value.length;
+       wrapper.classList.toggle('is-limit-reached',
+           textarea.value.length >= MAX_LENGTH);
+   });
+
+Les 4 règles à retenir :
+   - Événement INPUT (pas keydown)
+   - Toujours TRONQUER après un coller
+   - Classe CSS pour l'état (jamais de style inline)
+   - aria-live pour l'accessibilité

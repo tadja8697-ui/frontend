@@ -1,0 +1,37 @@
+Le pattern "tableau accessible" :
+
+1. STRUCTURE PAGE
+   <header> → <nav>
+   <main>   → <table>
+   <footer>
+
+2. STRUCTURE TABLEAU
+   <table>
+       <caption>...</caption>          ← 1er enfant, obligatoire
+       <thead>
+           <tr>
+               <th scope="col">...</th> ← En-têtes colonnes
+           </tr>
+       </thead>
+       <tbody>
+           <tr>
+               <th scope="row">...</th> ← En-tête ligne
+               <td>...</td>
+           </tr>
+           <tr>
+               <td colspan="N">...</td> ← Ligne fusionnée
+           </tr>
+       </tbody>
+   </table>
+
+Règles d'or :
+   - <table> UNIQUEMENT pour les données tabulaires
+   - <caption> TOUJOURS en 1er enfant
+   - scope="col" sur les <th> du thead
+   - scope="row" sur les en-têtes de lignes
+   - colspan=N → UNE SEULE cellule dans la ligne
+
+Les 3 tests de validation :
+   1. validator.w3.org       → 0 erreur HTML
+   2. axe DevTools            → 0 problème a11y
+   3. NVDA / VoiceOver        → annonce le contexte complet
